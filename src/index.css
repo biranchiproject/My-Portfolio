@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Dark Portfolio Design System with Green Gradient - All colors in HSL or RGBA */
+
+@layer base {
+  :root {
+    /* Dark theme base colors */
+    --background: 0 0% 4.1%;
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 6.7%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 6.7%;
+    --popover-foreground: 0 0% 98%;
+
+    /* Green gradient primary */
+    --primary: 142 76% 36%;
+    --primary-foreground: 0 0% 4.1%;
+
+    --secondary: 0 0% 10.6%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 10.6%;
+    --muted-foreground: 0 0% 64.9%;
+
+    --accent: 142 76% 36%;
+    --accent-foreground: 0 0% 4.1%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 142 76% 36%;
+
+    --radius: 0.75rem;
+
+    /* Custom design tokens */
+    --neon-green: 142 76% 36%;
+    --neon-green-glow: 142 76% 36%;
+    --dark-bg: 0 0% 4.1%;
+    --dark-surface: 0 0% 6.7%;
+    --dark-border: 0 0% 14.9%;
+    --gray-text: 0 0% 80%;
+    
+    /* Gradients */
+    --gradient-primary: radial-gradient(circle, rgba(34, 197, 94, 1) 0%, rgba(22, 163, 74, 1) 100%);
+    --gradient-dark: linear-gradient(180deg, hsl(var(--dark-bg)), hsl(0 0% 2%));
+    --gradient-card: radial-gradient(circle, rgba(34, 197, 94, 0.1) 0%, rgba(22, 163, 74, 0.1) 100%);
+    
+    /* Shadows and glows */
+    --shadow-neon: 0 0 20px rgba(34, 197, 94, 0.3);
+    --shadow-neon-strong: 0 0 40px rgba(34, 197, 94, 0.5);
+    --shadow-dark: 0 10px 30px hsla(0, 0%, 0%, 0.5);
+    
+    /* Animation timing */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
