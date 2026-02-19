@@ -1,6 +1,6 @@
 import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import profilePhoto from "@/assets/profile-photo.jpg";
+import profilePhoto from "@/assets/profile-photo.jpeg";
 
 const HeroSection = () => {
   const scrollToAbout = () => {
@@ -11,7 +11,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section id="home" className="min-h-screen bg-gradient-dark flex items-center justify-center relative overflow-hidden">
+    <section id="home" className="min-h-screen bg-gradient-dark flex items-center justify-center relative overflow-hidden pt-16 md:pt-0">
       {/* Animated ribbon text */}
       <div className="absolute top-20 left-0 right-0 overflow-hidden">
         <div className="whitespace-nowrap text-6xl md:text-8xl font-bold text-neon-green/10 animate-scroll-horizontal">
@@ -27,10 +27,10 @@ const HeroSection = () => {
           </p>
 
           {/* Main Title */}
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 animate-slide-up" style={{ animationDelay: "0.4s" }}>
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 animate-slide-up leading-tight" style={{ animationDelay: "0.4s" }}>
             <span className="text-neon-green">Creative</span>{" "}
             <span className="text-foreground">Designer &</span>
-            <br />
+            <br className="hidden md:block" />
             <span className="text-foreground">Developer</span>
           </h1>
 

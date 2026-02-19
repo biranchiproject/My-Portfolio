@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import emailjs from "@emailjs/browser";
 
 const ContactSection = () => {
+  const form = useRef<HTMLFormElement>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -26,16 +28,33 @@ const ContactSection = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    if (!form.current) return;
 
-    toast({
-      title: "Message sent successfully!",
-      description: "Thank you for reaching out. I'll get back to you soon.",
-    });
+    try {
+      await emailjs.sendForm(
+        "service_k19te1r", // Service ID
+        "template_rmf4u1e", // Template ID
+        form.current,
+        "shXq1a-NPznrYz13n" // Public Key
+      );
 
-    setFormData({ name: "", email: "", message: "" });
-    setIsSubmitting(false);
+      toast({
+        title: "Message sent successfully!",
+        description: "Thank you for reaching out. I'll get back to you soon.",
+      });
+
+      setFormData({ name: "", email: "", message: "" });
+      form.current.reset();
+    } catch (error) {
+      console.error("EmailJS Error:", error);
+      toast({
+        title: "Error sending message",
+        description: "Something went wrong. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contactInfo = [
@@ -60,7 +79,7 @@ const ContactSection = () => {
   ];
 
   return (
-    <section id="contact" className="py-20 bg-dark-surface">
+    <section id="contact" className="py-12 md:py-20 bg-dark-surface">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
@@ -71,21 +90,21 @@ const ContactSection = () => {
           </p>
         </div>
 
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
           {/* Contact Form */}
           <div className="bg-gradient-card border border-dark-border rounded-2xl p-8">
             <h3 className="text-2xl font-bold text-foreground mb-6">
               Send me a message
             </h3>
-            
-            <form onSubmit={handleSubmit} className="space-y-6">
+
+            <form id="contact-form" ref={form} onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-text mb-2">
                   Your Name
                 </label>
                 <Input
                   id="name"
-                  name="name"
+                  name="name" // This matches 'from_name' or similar variables in EmailJS template
                   type="text"
                   required
                   value={formData.name}
@@ -101,7 +120,7 @@ const ContactSection = () => {
                 </label>
                 <Input
                   id="email"
-                  name="email"
+                  name="email" // This matches 'from_email' or similar variables in EmailJS template
                   type="email"
                   required
                   value={formData.email}
@@ -117,7 +136,7 @@ const ContactSection = () => {
                 </label>
                 <Textarea
                   id="message"
-                  name="message"
+                  name="message" // This matches 'message' in EmailJS template
                   required
                   rows={5}
                   value={formData.message}
@@ -151,8 +170,8 @@ const ContactSection = () => {
                 Get in touch
               </h3>
               <p className="text-gray-text text-lg leading-relaxed mb-8">
-                I'm always open to discussing new opportunities, creative projects, 
-                or potential collaborations. Whether you have a specific project in mind 
+                I'm always open to discussing new opportunities, creative projects,
+                or potential collaborations. Whether you have a specific project in mind
                 or just want to connect, I'd love to hear from you.
               </p>
             </div>
@@ -187,7 +206,7 @@ const ContactSection = () => {
                 Currently Available
               </h4>
               <p className="text-gray-text">
-                I'm currently accepting new projects and collaborations. 
+                I'm currently accepting new projects and collaborations.
                 Let's create something amazing together!
               </p>
             </div>

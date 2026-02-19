@@ -19,7 +19,7 @@ const Footer = () => {
 
   return (
     <footer className="bg-dark-bg border-t border-dark-border">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="md:col-span-2">
@@ -30,10 +30,10 @@ const Footer = () => {
               </span>
             </div>
             <p className="text-gray-text leading-relaxed max-w-md">
-              Creative Designer & Developer based in Bhubaneswar, Odisha. 
+              Creative Designer & Developer based in Bhubaneswar, Odisha.
               Building digital experiences that inspire and drive success.
             </p>
-            
+
             {/* Social Links */}
             <div className="flex items-center space-x-4 mt-6">
               {socialLinks.map((social, index) => (
@@ -72,13 +72,13 @@ const Footer = () => {
             <p className="text-gray-text text-sm mb-4">
               Get notified about new projects and insights.
             </p>
-            <div className="flex">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-0">
               <input
                 type="email"
                 placeholder="Your email"
-                className="flex-1 px-3 py-2 bg-dark-surface border border-dark-border rounded-l-lg text-foreground text-sm focus:outline-none focus:border-neon-green"
+                className="flex-1 px-3 py-2 bg-dark-surface border border-dark-border rounded-lg sm:rounded-r-none text-foreground text-sm focus:outline-none focus:border-neon-green"
               />
-              <button className="px-4 py-2 bg-neon-green text-dark-bg rounded-r-lg hover:shadow-neon transition-all duration-300 text-sm font-semibold">
+              <button className="px-4 py-2 bg-neon-green text-dark-bg rounded-lg sm:rounded-l-none hover:shadow-neon transition-all duration-300 text-sm font-semibold">
                 Subscribe
               </button>
             </div>

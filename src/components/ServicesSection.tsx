@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, Code, Palette, Target, Users } from "lucide-react";
+import { ChevronDown, Code, Palette, Target, Users, Smartphone, Brain, Server, Layers, Rocket } from "lucide-react";
 
 const ServicesSection = () => {
   const [openService, setOpenService] = useState<number | null>(0);
@@ -12,14 +12,77 @@ const ServicesSection = () => {
       description: "Building fast, scalable, and responsive websites",
       details: [
         "Webflow Development",
-        "CMS Implementation", 
+        "CMS Implementation",
         "Responsive Design",
         "Web Performance Optimization",
-        "E-commerce Solutions"
+        "Basic E-commerce Solutions"
       ]
     },
     {
       id: 1,
+      icon: <Smartphone className="w-6 h-6" />,
+      title: "Basic Android Development",
+      description: "Building functional and user-friendly Android applications",
+      details: [
+        "Basic Java & Kotlin",
+        "Basic API Integration",
+        "Basic App Maintenance"
+      ]
+    },
+    {
+      id: 2,
+      icon: <Brain className="w-6 h-6" />,
+      title: "AI & LLM Development",
+      description: "Building intelligent applications using latest AI technologies",
+      details: [
+        "RAG Implementation",
+        "LLM Integration (GPT, Claude, Llama)",
+        "Prompt Engineering",
+        "AI Agents & Chatbots",
+        "Document Intelligence"
+      ]
+    },
+    {
+      id: 3,
+      icon: <Server className="w-6 h-6" />,
+      title: "Basic Backend Development",
+      description: "Designing scalable and secure server-side architectures",
+      details: [
+        "RESTful API Design",
+        "Database Management (SQL/NoSQL)",
+        "Authentication & Security",
+        "Microservices",
+        "Serverless Functions"
+      ]
+    },
+    {
+      id: 4,
+      icon: <Layers className="w-6 h-6" />,
+      title: "Full-Stack Engineering",
+      description: "End-to-end web application development",
+      details: [
+        "React/Next.js Frontend",
+        "Node.js/Python Backend",
+        "State Management",
+        "API Integration",
+        "Performance Tuning"
+      ]
+    },
+    {
+      id: 5,
+      icon: <Rocket className="w-6 h-6" />,
+      title: "Basic Deployment & DevOps",
+      description: "Streamlining development and production workflows",
+      details: [
+        "CI/CD Pipelines",
+        "Docker Containerization",
+        "Cloud Hosting (AWS/GCP/Azure)",
+        "Server Configuration",
+        "Monitoring & Logging"
+      ]
+    },
+    {
+      id: 6,
       icon: <Palette className="w-6 h-6" />,
       title: "UI/UX Design",
       description: "Creating intuitive and beautiful user experiences",
@@ -32,7 +95,7 @@ const ServicesSection = () => {
       ]
     },
     {
-      id: 2,
+      id: 7,
       icon: <Target className="w-6 h-6" />,
       title: "Brand Design",
       description: "Developing cohesive brand identities that resonate",
@@ -45,7 +108,7 @@ const ServicesSection = () => {
       ]
     },
     {
-      id: 3,
+      id: 8,
       icon: <Users className="w-6 h-6" />,
       title: "Art Lead",
       description: "Leading creative teams to deliver exceptional results",
@@ -64,7 +127,7 @@ const ServicesSection = () => {
   };
 
   return (
-    <section id="services" className="py-20 bg-dark-surface">
+    <section id="services" className="py-12 md:py-20 bg-dark-surface">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
@@ -99,12 +162,11 @@ const ServicesSection = () => {
                   </div>
                 </div>
                 <ChevronDown
-                  className={`w-5 h-5 text-neon-green transition-transform duration-300 ${
-                    openService === service.id ? "transform rotate-180" : ""
-                  }`}
+                  className={`w-5 h-5 text-neon-green transition-transform duration-300 ${openService === service.id ? "transform rotate-180" : ""
+                    }`}
                 />
               </button>
-              
+
               {openService === service.id && (
                 <div className="px-6 pb-6 border-t border-dark-border/50">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">

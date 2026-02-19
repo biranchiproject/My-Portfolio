@@ -1,42 +1,24 @@
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Github } from "lucide-react";
-import project1 from "@/assets/project-1.jpg";
-import project2 from "@/assets/project-2.jpg";
-import project3 from "@/assets/project-3.jpg";
+import project2 from "@/assets/project-2.png";
+import { useNavigate } from "react-router-dom";
 
 const PortfolioSection = () => {
+  const navigate = useNavigate();
   const projects = [
     {
       id: 1,
-      title: "Photon Collective",
-      description: "A modern tech startup website with dark theme and neon accents. Built with Webflow, featuring responsive design and smooth animations.",
-      image: project1,
-      tags: ["Webflow", "UI/UX", "Responsive"],
-      liveUrl: "#",
-      githubUrl: "#"
-    },
-    {
-      id: 2,
-      title: "Fashion E-commerce",
-      description: "Minimalist e-commerce platform for a fashion brand. Clean design with focus on product photography and user experience.",
+      title: "Sona Store",
+      description: "A dynamic app store platform featuring a vast library of applications, seamless downloads, and an intuitive, modern interface similar to the Play Store.",
       image: project2,
-      tags: ["E-commerce", "React", "Design"],
-      liveUrl: "#",
-      githubUrl: "#"
-    },
-    {
-      id: 3,
-      title: "Analytics Dashboard",
-      description: "SaaS dashboard with complex data visualization. Modern interface design with intuitive user experience and real-time updates.",
-      image: project3,
-      tags: ["Dashboard", "Data Viz", "SaaS"],
-      liveUrl: "#",
+      tags: ["App Store", "React", "Web App"],
+      liveUrl: "https://sona-store.pages.dev/",
       githubUrl: "#"
     }
   ];
 
   return (
-    <section id="portfolio" className="py-20 bg-dark-surface">
+    <section id="portfolio" className="py-12 md:py-20 bg-dark-surface">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
@@ -47,11 +29,11 @@ const PortfolioSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        <div className="flex flex-wrap justify-center gap-8 max-w-7xl mx-auto">
           {projects.map((project, index) => (
             <div
               key={project.id}
-              className="group bg-gradient-card border border-dark-border rounded-2xl overflow-hidden hover:shadow-neon transition-all duration-500 hover:scale-105 animate-fade-in"
+              className="w-full max-w-sm lg:max-w-md group bg-gradient-card border border-dark-border rounded-2xl overflow-hidden hover:shadow-neon transition-all duration-500 hover:scale-105 animate-fade-in"
               style={{ animationDelay: `${index * 0.2}s` }}
             >
               {/* Project Image */}
@@ -110,7 +92,7 @@ const PortfolioSection = () => {
         {/* View More Button */}
         <div className="text-center mt-12">
           <Button
-            onClick={() => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })}
+            onClick={() => navigate("/projects")}
             variant="outline"
             className="border-neon-green text-neon-green hover:bg-neon-green hover:text-dark-bg font-semibold px-8 py-3 text-lg transition-all duration-300"
           >

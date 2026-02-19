@@ -37,7 +37,7 @@ const TestimonialsSection = () => {
   ];
 
   return (
-    <section id="testimonials" className="py-20 bg-background">
+    <section id="testimonials" className="py-12 md:py-20 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
@@ -90,7 +90,7 @@ const TestimonialsSection = () => {
         {/* Privacy Notice */}
         <div className="text-center mt-12">
           <p className="text-sm text-gray-text max-w-2xl mx-auto">
-            All testimonials are from real clients who have given consent to share their feedback. 
+            All testimonials are from real clients who have given consent to share their feedback.
             Client privacy and confidentiality are always respected in our work relationships.
           </p>
         </div>
