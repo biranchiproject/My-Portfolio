@@ -1,14 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Download } from "lucide-react";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [cvUrl, setCvUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchCv = async () => {
+      try {
+        console.log("Fetching CV from backend...");
+        const response = await fetch("http://127.0.0.1:8000/cv");
+        if (response.ok) {
+          const data = await response.json();
+          console.log("CV Data received:", data);
+          setCvUrl(data.file_url);
+        } else {
+          console.error("Failed to fetch CV, status:", response.status);
+        }
+      } catch (error) {
+        console.error("Fetch CV error:", error);
+      }
+    };
+    fetchCv();
+  }, []);
 
   const navigation = [
     { name: "Home", href: "#home" },
     { name: "About Us", href: "#about" },
     { name: "Services", href: "#services" },
+    { name: "Cybersecurity", href: "#cybersecurity" },
     { name: "Education", href: "#education" },
     { name: "My Work", href: "#portfolio" },
     { name: "Testimonials", href: "#testimonials" },
@@ -49,7 +70,7 @@ const Header = () => {
           </nav>
 
           {/* Desktop CTA */}
-          <div className="hidden md:block">
+          <div className="hidden md:flex items-center space-x-4">
             <Button
               onClick={() => scrollToSection("#contact")}
               className="bg-neon-green text-dark-bg hover:shadow-neon-strong font-semibold transition-all duration-300"
@@ -82,7 +103,7 @@ const Header = () => {
                   {item.name}
                 </button>
               ))}
-              <div className="px-3 py-2">
+              <div className="px-3 py-2 space-y-2">
                 <Button
                   onClick={() => scrollToSection("#contact")}
                   className="w-full bg-neon-green text-dark-bg hover:shadow-neon-strong font-semibold transition-all duration-300"

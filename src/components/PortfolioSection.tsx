@@ -1,11 +1,16 @@
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Github } from "lucide-react";
+import { ExternalLink, Github, Loader2 } from "lucide-react";
 import project2 from "@/assets/project-2.png";
+import hackerStoreImg from "@/assets/hacker-store.png";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 const PortfolioSection = () => {
   const navigate = useNavigate();
-  const projects = [
+  const [projects, setProjects] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fallbackProjects = [
     {
       id: 1,
       title: "Sona Store",
@@ -14,8 +19,50 @@ const PortfolioSection = () => {
       tags: ["App Store", "React", "Web App"],
       liveUrl: "https://sona-store.pages.dev/",
       githubUrl: "#"
+    },
+    {
+      id: 2,
+      title: "Hacker Store",
+      description: "A modern cyber-themed app store platform designed with a hacker-style UI. It features a sleek dark interface, secure download system, and categorized applications.",
+      image: hackerStoreImg,
+      tags: ["Cybersecurity", "React", "Web App", "Full Stack"],
+      liveUrl: "https://hacker-store.pages.dev/",
+      githubUrl: "#"
     }
   ];
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/projects");
+        if (response.ok) {
+           const data = await response.json();
+           if (data && data.length > 0) {
+               // Strictly ONLY show Sona Store and Hacker Store on the first page
+               const featured = data.filter((p: any) => 
+                   p.title === "Sona Store" || p.title === "Hacker Store"
+               );
+               
+               if (featured.length > 0) {
+                   setProjects(featured);
+               } else {
+                   setProjects(fallbackProjects);
+               }
+           } else {
+               setProjects(fallbackProjects);
+           }
+        } else {
+            setProjects(fallbackProjects);
+        }
+      } catch (error) {
+        console.error("Fetch projects error:", error);
+        setProjects(fallbackProjects);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchProjects();
+  }, []);
 
   return (
     <section id="portfolio" className="py-12 md:py-20 bg-dark-surface">
@@ -37,12 +84,18 @@ const PortfolioSection = () => {
               style={{ animationDelay: `${index * 0.2}s` }}
             >
               {/* Project Image */}
-              <div className="relative overflow-hidden">
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
-                />
+              <div className="relative overflow-hidden h-48">
+                {isLoading ? (
+                    <div className="w-full h-full bg-dark-bg flex items-center justify-center">
+                        <Loader2 className="w-8 h-8 text-neon-green animate-spin" />
+                    </div>
+                ) : (
+                    <img
+                      src={project.image_url || project.image}
+                      alt={project.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-dark-bg/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
 
@@ -71,7 +124,7 @@ const PortfolioSection = () => {
                 <div className="flex gap-3">
                   <Button
                     className="flex-1 bg-neon-green text-dark-bg hover:shadow-neon font-semibold transition-all duration-300"
-                    onClick={() => window.open(project.liveUrl, "_blank")}
+                    onClick={() => window.open(project.liveUrl || project.live_link, "_blank")}
                   >
                     <ExternalLink className="w-4 h-4 mr-2" />
                     View Live
@@ -79,7 +132,7 @@ const PortfolioSection = () => {
                   <Button
                     variant="outline"
                     className="border-neon-green text-neon-green hover:bg-neon-green hover:text-dark-bg transition-all duration-300"
-                    onClick={() => window.open(project.githubUrl, "_blank")}
+                    onClick={() => window.open(project.githubUrl || project.github_link, "_blank")}
                   >
                     <Github className="w-4 h-4" />
                   </Button>

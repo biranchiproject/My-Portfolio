@@ -160,6 +160,16 @@ export default {
             transform: "translateX(-100%)"
           }
         },
+        "pulse-glow": {
+          "0%, 100%": {
+            boxShadow: "0 0 10px rgba(34, 197, 94, 0.4)",
+            transform: "scale(1)"
+          },
+          "50%": {
+            boxShadow: "0 0 25px rgba(34, 197, 94, 0.8)",
+            transform: "scale(1.05)"
+          }
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -170,6 +180,7 @@ export default {
         "float": "float 3s ease-in-out infinite",
         "glow": "glow 2s ease-in-out infinite",
         "scroll-horizontal": "scroll-horizontal 20s linear infinite",
+        "pulse-glow": "pulse-glow 2s ease-in-out infinite",
       },
     },
   },

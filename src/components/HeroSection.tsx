@@ -1,13 +1,166 @@
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Download, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import profilePhoto from "@/assets/profile-photo.jpeg";
+import { useState, useEffect } from "react";
+import AdminLogin from "./AdminLogin";
+import { forceDownload } from "@/utils/download";
+import { toast } from "sonner";
+import { motion } from "framer-motion";
+import Magnetic from "./Magnetic";
+
+const roles = ["Creative Designer", "Full Stack Developer", "Cybersecurity Specialist", "Tech Visionary"];
 
 const HeroSection = () => {
+  const [clickCount, setClickCount] = useState(0);
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const [cvUrl, setCvUrl] = useState<string | null>(null);
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState<string | null>(null);
+  const [roleIndex, setRoleIndex] = useState(0);
+  const [displayText, setDisplayText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // Glitch Typing Effect
+  useEffect(() => {
+    const activeRole = roles[roleIndex];
+    const typeSpeed = isDeleting ? 50 : 150;
+    
+    const timeout = setTimeout(() => {
+      if (!isDeleting && displayText.length < activeRole.length) {
+        setDisplayText(activeRole.slice(0, displayText.length + 1));
+      } else if (!isDeleting && displayText.length === activeRole.length) {
+        setTimeout(() => setIsDeleting(true), 2000);
+      } else if (isDeleting && displayText.length > 0) {
+        setDisplayText(activeRole.slice(0, displayText.length - 1));
+      } else if (isDeleting && displayText.length === 0) {
+        setIsDeleting(false);
+        setRoleIndex((prev) => (prev + 1) % roles.length);
+      }
+    }, typeSpeed);
+
+    return () => clearTimeout(timeout);
+  }, [displayText, isDeleting, roleIndex]);
+
+  useEffect(() => {
+    const fetchCv = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/cv");
+        if (response.ok) {
+          const data = await response.json();
+          if (data.file_url) {
+            setCvUrl(data.file_url);
+          }
+        }
+      } catch (err) {
+        console.error("Fetch CV error:", err);
+      }
+    };
+    
+    const fetchProfilePhoto = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/profile-photo");
+        if (response.ok) {
+          const data = await response.json();
+          if (data.file_url) {
+            setProfilePhotoUrl(data.file_url);
+          }
+        }
+      } catch (err) {
+        console.error("Fetch Profile Photo error:", err);
+      }
+    };
+
+    fetchCv();
+    fetchProfilePhoto();
+  }, []);
+
+  useEffect(() => {
+    const fetchCv = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/cv");
+        if (response.ok) {
+          const data = await response.json();
+          if (data.file_url) {
+            setCvUrl(data.file_url);
+          }
+        }
+      } catch (err) {
+        console.error("Fetch CV error:", err);
+      }
+    };
+    fetchCv();
+  }, []);
+
+  const handleDownloadCv = async () => {
+    if (!cvUrl) {
+      toast.error("CV not available. Please upload from Admin Panel.");
+      return;
+    }
+    
+    toast.success("Downloading CV...");
+    // Dynamically detect extension from URL
+    const extension = cvUrl.split(".").pop()?.split("?")[0] || "pdf";
+    await forceDownload(cvUrl, `Raja_CV.${extension}`);
+  };
+
+  useEffect(() => {
+    if (clickCount === 0) return;
+    const timer = setTimeout(() => setClickCount(0), 500);
+    return () => clearTimeout(timer);
+  }, [clickCount]);
+
+  const handleProfileClick = () => {
+    const nextCount = clickCount + 1;
+    if (nextCount === 3) {
+      setIsAdminOpen(true);
+      setClickCount(0);
+    } else {
+      setClickCount(nextCount);
+    }
+  };
+
   const scrollToAbout = () => {
     const element = document.querySelector("#about");
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
+  };
+
+  const particlesOptions = {
+    background: { color: { value: "transparent" } },
+    fpsLimit: 120,
+    interactivity: {
+      events: {
+        onHover: { enable: true, mode: "grab" },
+        onClick: { enable: true, mode: "push" },
+      },
+      modes: {
+        grab: { distance: 140, links: { opacity: 0.5 } },
+        push: { quantity: 4 },
+      },
+    },
+    particles: {
+      color: { value: "#22c55e" },
+      links: {
+        color: "#22c55e",
+        distance: 150,
+        enable: true,
+        opacity: 0.2,
+        width: 1,
+      },
+      move: {
+        enable: true,
+        speed: 1,
+        direction: "none",
+        random: false,
+        straight: false,
+        outModes: { default: "out" },
+      },
+      number: { density: { enable: true, area: 800 }, value: 80 },
+      opacity: { value: 0.3 },
+      shape: { type: "circle" },
+      size: { value: { min: 1, max: 3 } },
+    },
+    detectRetina: true,
   };
 
   return (
@@ -27,11 +180,13 @@ const HeroSection = () => {
           </p>
 
           {/* Main Title */}
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 animate-slide-up leading-tight" style={{ animationDelay: "0.4s" }}>
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 animate-slide-up leading-tight min-h-[1.2em]" style={{ animationDelay: "0.4s" }}>
             <span className="text-neon-green">Creative</span>{" "}
-            <span className="text-foreground">Designer &</span>
             <br className="hidden md:block" />
-            <span className="text-foreground">Developer</span>
+            <span className="text-foreground relative">
+              {displayText}
+              <span className="inline-block w-[2px] h-[0.8em] bg-neon-green ml-1 animate-pulse"></span>
+            </span>
           </h1>
 
           {/* Subtitle */}
@@ -41,10 +196,10 @@ const HeroSection = () => {
 
           {/* Profile Photo */}
           <div className="flex justify-center mb-12 animate-scale-in" style={{ animationDelay: "0.8s" }}>
-            <div className="relative">
+            <div className="relative cursor-pointer" onClick={handleProfileClick}>
               <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-neon-green shadow-neon-strong animate-float">
                 <img
-                  src={profilePhoto}
+                  src={profilePhotoUrl || profilePhoto}
                   alt="Biranchi - Creative Designer & Developer"
                   className="w-full h-full object-cover"
                 />
@@ -53,21 +208,37 @@ const HeroSection = () => {
             </div>
           </div>
 
+          <AdminLogin isOpen={isAdminOpen} onOpenChange={setIsAdminOpen} />
+
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16 animate-slide-up" style={{ animationDelay: "1s" }}>
-            <Button
-              onClick={() => document.querySelector("#portfolio")?.scrollIntoView({ behavior: "smooth" })}
-              className="bg-neon-green text-dark-bg hover:shadow-neon-strong font-semibold px-8 py-3 text-lg transition-all duration-300"
-            >
-              View My Work
-            </Button>
-            <Button
-              onClick={() => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })}
-              variant="outline"
-              className="border-neon-green text-neon-green hover:bg-neon-green hover:text-dark-bg font-semibold px-8 py-3 text-lg transition-all duration-300"
-            >
-              Get In Touch
-            </Button>
+            <Magnetic>
+              <Button
+                onClick={() => document.querySelector("#portfolio")?.scrollIntoView({ behavior: "smooth" })}
+                className="bg-neon-green text-dark-bg hover:shadow-neon-strong font-semibold px-8 py-3 text-lg transition-all duration-300 min-w-[180px]"
+              >
+                View My Work
+              </Button>
+            </Magnetic>
+            <Magnetic>
+              <Button
+                onClick={() => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })}
+                variant="outline"
+                className="border-neon-green text-neon-green hover:bg-neon-green hover:text-dark-bg font-semibold px-8 py-3 text-lg transition-all duration-300 min-w-[180px]"
+              >
+                Get In Touch
+              </Button>
+            </Magnetic>
+            <Magnetic>
+              <Button
+                onClick={handleDownloadCv}
+                variant="secondary"
+                className="bg-dark-surface border border-neon-green/30 text-foreground hover:border-neon-green font-semibold px-8 py-3 text-lg transition-all duration-300 flex items-center gap-2 min-w-[180px]"
+              >
+                <Download size={20} className="text-neon-green" />
+                Download CV
+              </Button>
+            </Magnetic>
           </div>
 
           {/* Scroll Down Indicator */}
@@ -83,7 +254,7 @@ const HeroSection = () => {
       </div>
 
       {/* Background gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background pointer-events-none"></div>
+      <div className="absolute inset-0 bg-black pointer-events-none z-[0]"></div>
     </section>
   );
 };

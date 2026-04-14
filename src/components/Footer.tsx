@@ -1,4 +1,4 @@
-import { Github, Linkedin, Twitter, Mail } from "lucide-react";
+import { Github, Linkedin, Instagram, Mail } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -11,9 +11,9 @@ const Footer = () => {
   ];
 
   const socialLinks = [
-    { icon: <Github className="w-5 h-5" />, href: "#", label: "GitHub" },
-    { icon: <Linkedin className="w-5 h-5" />, href: "#", label: "LinkedIn" },
-    { icon: <Twitter className="w-5 h-5" />, href: "#", label: "Twitter" },
+    { icon: <Github className="w-5 h-5" />, href: "https://github.com/settings/profile", label: "GitHub" },
+    { icon: <Linkedin className="w-5 h-5" />, href: "https://www.linkedin.com/in/biranchi-narayan-sahoo-98b695390/", label: "LinkedIn" },
+    { icon: <Instagram className="w-5 h-5" />, href: "https://www.instagram.com/biranchi._.sahoo?igsh=MWE4aWM0NWt4ZmRmbg==", label: "Instagram" },
     { icon: <Mail className="w-5 h-5" />, href: "mailto:sahoobiranchi8249@gmail.com", label: "Email" },
   ];
 
@@ -30,7 +30,7 @@ const Footer = () => {
               </span>
             </div>
             <p className="text-gray-text leading-relaxed max-w-md">
-              Creative Designer & Developer based in Bhubaneswar, Odisha.
+              Creative Designer & Developer based in Cuttack, Odisha.
               Building digital experiences that inspire and drive success.
             </p>
 
@@ -86,12 +86,9 @@ const Footer = () => {
         </div>
 
         {/* Bottom Section */}
-        <div className="border-t border-dark-border mt-12 pt-8 flex flex-col md:flex-row items-center justify-between">
+        <div className="border-t border-dark-border mt-12 pt-8 flex flex-col md:flex-row items-center justify-between text-center md:text-left">
           <p className="text-gray-text text-sm">
-            ©{currentYear} Biranchi | ALL RIGHTS RESERVED
-          </p>
-          <p className="text-gray-text text-sm mt-4 md:mt-0">
-            Made with ❤️ in Bhubaneswar, Odisha
+            ©{currentYear} Biranchi Creativity | ALL RIGHTS RESERVED
           </p>
         </div>
       </div>

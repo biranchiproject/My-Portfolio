@@ -1,60 +1,62 @@
-import { Brain, Server, Layers, Rocket, Figma, Code2, Palette, Users, Smartphone } from "lucide-react";
+import { Brain, Server, Layers, Rocket, Figma, Code2, Palette, Users, Smartphone, Database } from "lucide-react";
 
 const SkillsSection = () => {
   const skills = [
     {
       icon: <Brain className="w-8 h-8" />,
       title: "AI & LLM Development",
-      description: "Building intelligent applications using Retrieval-Augmented Generation (RAG), LLM integrations (local and API-based), prompt engineering, and document-grounded AI systems.",
-      level: "Expert"
+      description: "Building intelligent applications using Retrieval-Augmented Generation (RAG), LLM integrations (local and API-based), prompt engineering, and document-grounded AI systems."
+    },
+    {
+      icon: <Database className="w-8 h-8" />,
+      title: "Database & Backend Services",
+      description: "Managing and integrating modern databases with scalable backend systems, including real-time data handling, authentication, and efficient data modeling.",
+      points: [
+        "Supabase (Authentication, Realtime Database, APIs)",
+        "MongoDB (CRUD Operations, NoSQL Data Modeling)",
+        "PostgreSQL (Relational Database, Queries, Schema Design)",
+        "Firebase (Realtime Sync, Firestore, Authentication)"
+      ]
     },
     {
       icon: <Server className="w-8 h-8" />,
       title: "Backend Development",
-      description: "Designing scalable REST APIs, implementing authentication, handling databases, and building secure server-side logic for production-ready applications.",
-      level: "Advanced"
+      description: "Designing scalable REST APIs, implementing authentication, handling databases, and building secure server-side logic for production-ready applications."
     },
     {
       icon: <Layers className="w-8 h-8" />,
       title: "Full-Stack Engineering",
-      description: "Integrating frontend and backend systems into cohesive, high-performance applications with clean architecture and efficient data flow.",
-      level: "Advanced"
+      description: "Integrating frontend and backend systems into cohesive, high-performance applications with clean architecture and efficient data flow."
     },
     {
       icon: <Rocket className="w-8 h-8" />,
       title: "Deployment & DevOps",
-      description: "Managing production deployments, server configuration, environment setup, and performance optimization for reliable and scalable applications.",
-      level: "Advanced"
+      description: "Managing production deployments, server configuration, environment setup, and performance optimization for reliable and scalable applications."
     },
     {
       icon: <Code2 className="w-8 h-8" />,
       title: "Webflow",
-      description: "I build fast, scalable, responsive sites with Webflow's powerful visual development platform.",
-      level: "Expert"
+      description: "I build fast, scalable, responsive sites with Webflow's powerful visual development platform."
     },
     {
       icon: <Smartphone className="w-8 h-8" />,
       title: "Android Development",
-      description: "Building functional Android applications with Java and Kotlin, focusing on user-friendly interfaces and API integration.",
-      level: "Basic"
+      description: "Building functional Android applications with Java and Kotlin, focusing on user-friendly interfaces and API integration."
     },
     {
       icon: <Figma className="w-8 h-8" />,
       title: "Figma",
-      description: "UI/UX design with precision and empathy, creating user-centered digital experiences.",
-      level: "Advanced"
+      description: "UI/UX design with precision and empathy, creating user-centered digital experiences."
     },
     {
       icon: <Users className="w-8 h-8" />,
       title: "Art Lead",
-      description: "Creative direction for digital teams, ensuring cohesive brand experiences across all touchpoints.",
-      level: "Expert"
+      description: "Creative direction for digital teams, ensuring cohesive brand experiences across all touchpoints."
     },
     {
       icon: <Palette className="w-8 h-8" />,
       title: "Brand Design",
-      description: "Crafting memorable brand identities that resonate with target audiences and drive business growth.",
-      level: "Advanced"
+      description: "Crafting memorable brand identities that resonate with target audiences and drive business growth."
     }
   ];
 
@@ -93,13 +95,20 @@ const SkillsSection = () => {
                     <h3 className="text-2xl font-bold text-foreground">
                       {skill.title}
                     </h3>
-                    <span className="text-xs font-semibold text-neon-green bg-neon-green/10 px-3 py-1 rounded-full">
-                      {skill.level}
-                    </span>
                   </div>
                   <p className="text-gray-text leading-relaxed">
                     {skill.description}
                   </p>
+                  {skill.points && (
+                    <ul className="mt-4 space-y-2">
+                      {skill.points.map((point, i) => (
+                        <li key={i} className="flex items-center text-gray-text text-sm">
+                          <span className="w-1.5 h-1.5 rounded-full bg-neon-green mr-2 shadow-[0_0_5px_rgba(34,197,94,0.5)]"></span>
+                          {point}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               </div>
 
