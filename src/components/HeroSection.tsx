@@ -144,7 +144,7 @@ const HeroSection = () => {
   const containerVariants = {
     animate: {
       transition: {
-        staggerChildren: 0.05
+        staggerChildren: 0.15
       }
     }
   };
@@ -153,7 +153,7 @@ const HeroSection = () => {
     animate: {
       color: ["#9ca3af", "#22c55e", "#9ca3af"],
       transition: { 
-        duration: 3, 
+        duration: 8, 
         repeat: Infinity, 
         ease: "easeInOut" 
       }
