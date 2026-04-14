@@ -157,8 +157,6 @@ const HeroSection = () => {
 
           {/* Main Title */}
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 animate-slide-up leading-tight min-h-[1.2em]" style={{ animationDelay: "0.4s" }}>
-            <span className="text-neon-green">Creative</span>{" "}
-            <br className="hidden md:block" />
             <span className="text-foreground relative">
               {displayText}
               <span className="inline-block w-[2px] h-[0.8em] bg-neon-green ml-1 animate-pulse"></span>

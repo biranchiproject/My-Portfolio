@@ -1,8 +1,6 @@
 import { Github, Linkedin, Instagram, Mail } from "lucide-react";
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
-
   const quickLinks = [
     { name: "Privacy Policy", href: "#" },
     { name: "Terms & Conditions", href: "#" },
@@ -88,7 +86,7 @@ const Footer = () => {
         {/* Bottom Section */}
         <div className="border-t border-dark-border mt-12 pt-8 flex flex-col md:flex-row items-center justify-between text-center md:text-left">
           <p className="text-gray-text text-sm">
-            ©{currentYear} Biranchi Creativity | ALL RIGHTS RESERVED
+            © Biranchi Creativity | ALL RIGHTS RESERVED
           </p>
         </div>
       </div>

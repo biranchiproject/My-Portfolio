@@ -9,13 +9,11 @@ import PortfolioSection from "@/components/PortfolioSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
-import CustomCursor from "@/components/CustomCursor";
 
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground relative">
-      <CustomCursor />
       <Header />
 
       <main>
