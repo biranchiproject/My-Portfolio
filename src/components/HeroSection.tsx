@@ -140,7 +140,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section id="home" className="min-h-screen bg-gradient-dark flex items-center justify-center relative overflow-hidden pt-16 md:pt-0">
+    <section id="home" className="min-h-screen bg-gradient-dark flex items-center justify-center relative overflow-hidden pt-24 md:pt-28">
       {/* Animated ribbon text */}
       <div className="absolute top-20 left-0 right-0 overflow-hidden">
         <div className="whitespace-nowrap text-6xl md:text-8xl font-bold text-neon-green/10 animate-scroll-horizontal">
