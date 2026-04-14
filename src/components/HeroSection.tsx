@@ -157,10 +157,13 @@ const HeroSection = () => {
 
           {/* Main Title */}
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 animate-slide-up leading-tight min-h-[1.2em]" style={{ animationDelay: "0.4s" }}>
-            <span className="text-foreground relative">
-              {displayText}
-              <span className="inline-block w-[2px] h-[0.8em] bg-neon-green ml-1 animate-pulse"></span>
+            <span className="relative">
+              <span className="text-neon-green">{displayText.split(" ")[0]}</span>
+              <span className="text-foreground">
+                {displayText.includes(" ") ? " " + displayText.split(" ").slice(1).join(" ") : ""}
+              </span>
             </span>
+            <span className="inline-block w-[2px] h-[0.8em] bg-neon-green ml-1 animate-pulse"></span>
           </h1>
 
           {/* Subtitle */}
