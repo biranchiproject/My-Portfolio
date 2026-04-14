@@ -4,6 +4,7 @@ import { ArrowLeft, ExternalLink, Github, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import project2 from "@/assets/project-2.png";
 import hackerStoreImg from "@/assets/hacker-store.png";
+import { supabase } from "@/lib/supabase";
 
 const Projects = () => {
     const navigate = useNavigate();
@@ -44,18 +45,17 @@ const Projects = () => {
     useEffect(() => {
         const fetchProjects = async () => {
             try {
-                const response = await fetch("http://127.0.0.1:8000/projects");
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data && data.length > 0) {
-                        // EXCLUDE Sona Store and Hacker Store from this page
-                        const upcoming = data.filter((p: any) => 
-                            p.title !== "Sona Store" && p.title !== "Hacker Store"
-                        );
-                        setProjects(upcoming);
-                    } else {
-                        setProjects([]);
-                    }
+                const { data, error } = await supabase.from('projects').select('*');
+                if (error) {
+                  throw error;
+                }
+                
+                if (data && data.length > 0) {
+                    // EXCLUDE Sona Store and Hacker Store from this page
+                    const upcoming = data.filter((p: any) => 
+                        p.title !== "Sona Store" && p.title !== "Hacker Store"
+                    );
+                    setProjects(upcoming);
                 } else {
                     setProjects([]);
                 }

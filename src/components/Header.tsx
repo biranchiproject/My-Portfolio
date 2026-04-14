@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Download } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -9,15 +10,9 @@ const Header = () => {
   useEffect(() => {
     const fetchCv = async () => {
       try {
-        console.log("Fetching CV from backend...");
-        const response = await fetch("http://127.0.0.1:8000/cv");
-        if (response.ok) {
-          const data = await response.json();
-          console.log("CV Data received:", data);
-          setCvUrl(data.file_url);
-        } else {
-          console.error("Failed to fetch CV, status:", response.status);
-        }
+        const { data, error } = await supabase.from('cv').select('file_url').order('created_at', { ascending: false }).limit(1).single();
+        if (error && error.code !== 'PGRST116') throw error;
+        if (data?.file_url) setCvUrl(data.file_url);
       } catch (error) {
         console.error("Fetch CV error:", error);
       }

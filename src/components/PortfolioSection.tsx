@@ -4,6 +4,7 @@ import project2 from "@/assets/project-2.png";
 import hackerStoreImg from "@/assets/hacker-store.png";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 
 const PortfolioSection = () => {
   const navigate = useNavigate();
@@ -34,23 +35,22 @@ const PortfolioSection = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:8000/projects");
-        if (response.ok) {
-           const data = await response.json();
-           if (data && data.length > 0) {
-               // Strictly ONLY show Sona Store and Hacker Store on the first page
-               const featured = data.filter((p: any) => 
-                   p.title === "Sona Store" || p.title === "Hacker Store"
-               );
-               
-               if (featured.length > 0) {
-                   setProjects(featured);
-               } else {
-                   setProjects(fallbackProjects);
-               }
-           } else {
-               setProjects(fallbackProjects);
-           }
+        const { data, error } = await supabase.from('projects').select('*');
+        if (error) {
+          throw error;
+        }
+        
+        if (data && data.length > 0) {
+            // Strictly ONLY show Sona Store and Hacker Store on the first page
+            const featured = data.filter((p: any) => 
+                p.title === "Sona Store" || p.title === "Hacker Store"
+            );
+            
+            if (featured.length > 0) {
+                setProjects(featured);
+            } else {
+                setProjects(fallbackProjects);
+            }
         } else {
             setProjects(fallbackProjects);
         }

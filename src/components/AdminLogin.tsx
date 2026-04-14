@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { supabase } from "@/lib/supabase";
+import bcrypt from "bcryptjs";
 
 interface AdminLoginProps {
   isOpen: boolean;
@@ -21,26 +23,40 @@ const AdminLogin = ({ isOpen, onOpenChange }: AdminLoginProps) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, password }),
-      });
+      // 1. Fetch the admin record by username from the "admins" table
+      const { data, error } = await supabase
+        .from('admins')
+        .select('*')
+        .eq('username', username)
+        .single();
 
-      if (response.ok) {
-          const data = await response.json();
-          localStorage.setItem("admin_token", data.token);
-          toast.success("Login successful!");
-          onOpenChange(false);
-          navigate("/admin");
+      if (error || !data) {
+        toast.error("Invalid credentials");
+        setIsLoading(false);
+        return;
+      }
+
+      // 2. Compare the entered password with the stored hashed password using bcrypt
+      // (Added fallback just in case the password was saved as plain text directly in the database UI)
+      let isPasswordValid = false;
+      if (data.password.startsWith("$2a$") || data.password.startsWith("$2b$") || data.password.startsWith("$2y$")) {
+        isPasswordValid = bcrypt.compareSync(password, data.password);
       } else {
-          toast.error("Invalid credentials");
+        isPasswordValid = (password === data.password);
+      }
+
+      if (isPasswordValid) {
+        // 3. Store session flag in localStorage
+        localStorage.setItem("isAdminLoggedIn", "true");
+        toast.success("Login successful!");
+        onOpenChange(false);
+        navigate("/admin");
+      } else {
+        toast.error("Invalid credentials");
       }
     } catch (error) {
       console.error("Login error:", error);
-      toast.error("Failed to connect to backend");
+      toast.error("Failed to login");
     } finally {
       setIsLoading(false);
     }

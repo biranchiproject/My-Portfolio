@@ -7,6 +7,7 @@ import { forceDownload } from "@/utils/download";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import Magnetic from "./Magnetic";
+import { supabase } from "@/lib/supabase";
 
 const roles = ["Creative Designer", "Full Stack Developer", "Cybersecurity Specialist", "Tech Visionary"];
 
@@ -43,13 +44,9 @@ const HeroSection = () => {
   useEffect(() => {
     const fetchCv = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:8000/cv");
-        if (response.ok) {
-          const data = await response.json();
-          if (data.file_url) {
-            setCvUrl(data.file_url);
-          }
-        }
+        const { data, error } = await supabase.from('cv').select('file_url').order('created_at', { ascending: false }).limit(1).single();
+        if (error && error.code !== 'PGRST116') throw error;
+        if (data?.file_url) setCvUrl(data.file_url);
       } catch (err) {
         console.error("Fetch CV error:", err);
       }
@@ -57,13 +54,9 @@ const HeroSection = () => {
     
     const fetchProfilePhoto = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:8000/profile-photo");
-        if (response.ok) {
-          const data = await response.json();
-          if (data.file_url) {
-            setProfilePhotoUrl(data.file_url);
-          }
-        }
+        const { data, error } = await supabase.from('profile_photo').select('file_url').order('created_at', { ascending: false }).limit(1).single();
+        if (error && error.code !== 'PGRST116') throw error;
+        if (data?.file_url) setProfilePhotoUrl(data.file_url);
       } catch (err) {
         console.error("Fetch Profile Photo error:", err);
       }
@@ -71,23 +64,6 @@ const HeroSection = () => {
 
     fetchCv();
     fetchProfilePhoto();
-  }, []);
-
-  useEffect(() => {
-    const fetchCv = async () => {
-      try {
-        const response = await fetch("http://127.0.0.1:8000/cv");
-        if (response.ok) {
-          const data = await response.json();
-          if (data.file_url) {
-            setCvUrl(data.file_url);
-          }
-        }
-      } catch (err) {
-        console.error("Fetch CV error:", err);
-      }
-    };
-    fetchCv();
   }, []);
 
   const handleDownloadCv = async () => {

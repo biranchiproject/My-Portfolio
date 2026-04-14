@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Download, FileText, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { forceDownload } from "@/utils/download";
+import { supabase } from "@/lib/supabase";
 
 const FloatingCV = () => {
   const [cvUrl, setCvUrl] = useState<string | null>(null);
@@ -10,17 +11,14 @@ const FloatingCV = () => {
   useEffect(() => {
     const fetchCv = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:8000/cv");
-        if (response.ok) {
-          const data = await response.json();
-          if (data.file_url) {
-            setCvUrl(data.file_url);
-            setError(false);
-          } else {
-            console.warn("CV URL is null in database");
-            setError(true);
-          }
+        const { data, err } = await supabase.from('cv').select('file_url').order('created_at', { ascending: false }).limit(1).single();
+        if (err && err.code !== 'PGRST116') throw err;
+        
+        if (data?.file_url) {
+          setCvUrl(data.file_url);
+          setError(false);
         } else {
+          console.warn("CV URL is null in database");
           setError(true);
         }
       } catch (err) {

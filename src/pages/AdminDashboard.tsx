@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, Trash2, Edit2, Upload, ExternalLink, Github, LogOut, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { supabase } from "@/lib/supabase";
 
 const AdminDashboard = () => {
     const [projects, setProjects] = useState<any[]>([]);
@@ -23,10 +24,10 @@ const AdminDashboard = () => {
     const [isUploadingImage, setIsUploadingImage] = useState(false);
     const [localPreview, setLocalPreview] = useState<string | null>(null);
     const navigate = useNavigate();
-    const token = localStorage.getItem("admin_token");
+    const isLoggedIn = localStorage.getItem("isAdminLoggedIn") === "true";
 
     useEffect(() => {
-        if (!token) {
+        if (!isLoggedIn) {
             navigate("/");
             toast.error("Please login to access admin dashboard");
         } else {
@@ -43,13 +44,13 @@ const AdminDashboard = () => {
             
             return () => clearInterval(interval);
         }
-    }, [token]);
+    }, [isLoggedIn, navigate]);
 
     const fetchProjects = async () => {
         try {
-            const response = await fetch("http://127.0.0.1:8000/projects");
-            const data = await response.json();
-            setProjects(data);
+            const { data, error } = await supabase.from("projects").select("*");
+            if (error) throw error;
+            setProjects(data || []);
         } catch (error) {
             console.error("Fetch projects error:", error);
         }
@@ -57,13 +58,10 @@ const AdminDashboard = () => {
 
     const fetchCv = async () => {
         try {
-            const response = await fetch("http://127.0.0.1:8000/cv");
-            const data = await response.json();
-            if (data.id && data.file_url) {
-                setCvData(data);
-            } else {
-                setCvData(null);
-            }
+            const { data, error } = await supabase.from("cv").select("id, file_url").order("created_at", { ascending: false }).limit(1).single();
+            if (error && error.code !== "PGRST116") throw error;
+            if (data?.id && data?.file_url) setCvData(data);
+            else setCvData(null);
         } catch (error) {
             console.error("Fetch CV error:", error);
         }
@@ -71,20 +69,17 @@ const AdminDashboard = () => {
 
     const fetchProfilePhoto = async () => {
         try {
-            const response = await fetch("http://127.0.0.1:8000/profile-photo");
-            const data = await response.json();
-            if (data.id && data.file_url) {
-                setProfilePhotoData(data);
-            } else {
-                setProfilePhotoData(null);
-            }
+            const { data, error } = await supabase.from("profile_photo").select("id, file_url").order("created_at", { ascending: false }).limit(1).single();
+            if (error && error.code !== "PGRST116") throw error;
+            if (data?.id && data?.file_url) setProfilePhotoData(data);
+            else setProfilePhotoData(null);
         } catch (error) {
             console.error("Fetch Profile Photo error:", error);
         }
     };
 
     const handleLogout = () => {
-        localStorage.removeItem("admin_token");
+        localStorage.removeItem("isAdminLoggedIn");
         navigate("/");
         toast.info("Logged out");
     };
@@ -92,20 +87,12 @@ const AdminDashboard = () => {
     const handleAddProject = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await fetch("http://127.0.0.1:8000/projects", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify(newProject)
-            });
-            if (response.ok) {
-                toast.success("Project added!");
-                setIsAddingProject(false);
-                setNewProject({ title: "", description: "", live_link: "", github_link: "", image_url: "" });
-                fetchProjects();
-            }
+            const { error } = await supabase.from("projects").insert([newProject]);
+            if (error) throw error;
+            toast.success("Project added!");
+            setIsAddingProject(false);
+            setNewProject({ title: "", description: "", live_link: "", github_link: "", image_url: "" });
+            fetchProjects();
         } catch (error) {
             toast.error("Failed to add project");
         }
@@ -114,44 +101,25 @@ const AdminDashboard = () => {
     const handleUpdateProject = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            // Remove internal metadata (id, created_at) before sending to backend
             const { id, created_at, ...updateData } = editingProject;
-            
-            const response = await fetch(`http://127.0.0.1:8000/projects/${id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify(updateData)
-            });
-            if (response.ok) {
-                toast.success("Project Updated Successfully!");
-                setEditingProject(null);
-                setLocalPreview(null);
-                fetchProjects();
-            } else {
-                const errorData = await response.json();
-                toast.error(`Error: ${errorData.detail || "Failed to update project"}`);
-            }
-        } catch (error) {
-            toast.error("Network Error: Could not reach the server");
+            const { error } = await supabase.from("projects").update(updateData).eq("id", id);
+            if (error) throw error;
+            toast.success("Project Updated Successfully!");
+            setEditingProject(null);
+            setLocalPreview(null);
+            fetchProjects();
+        } catch (error: any) {
+            toast.error(`Error: ${error.message || "Failed to update project"}`);
         }
     };
 
     const handleDeleteProject = async (id: string) => {
         if (!confirm("Are you sure you want to delete this project?")) return;
         try {
-            const response = await fetch(`http://127.0.0.1:8000/projects/${id}`, {
-                method: "DELETE",
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            });
-            if (response.ok) {
-                toast.success("Project deleted");
-                fetchProjects();
-            }
+            const { error } = await supabase.from("projects").delete().eq("id", id);
+            if (error) throw error;
+            toast.success("Project deleted");
+            fetchProjects();
         } catch (error) {
             toast.error("Failed to delete project");
         }
@@ -161,24 +129,18 @@ const AdminDashboard = () => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        const formData = new FormData();
-        formData.append("file", file);
-
         try {
-            console.log("Uploading file:", file.name);
-            const response = await fetch("http://127.0.0.1:8000/upload-cv", {
-                method: "POST",
-                body: formData
-            });
-            const data = await response.json();
-            console.log("Upload response:", data);
+            const file_path = `cv/${file.name}`;
+            const { error: uploadError } = await supabase.storage.from("cv-files").upload(file_path, file, { upsert: true });
+            if (uploadError) throw uploadError;
+
+            const { data } = supabase.storage.from("cv-files").getPublicUrl(file_path);
             
-            if (response.ok && data.url) {
-                fetchCv();
-                toast.success("CV uploaded successfully!");
-            } else {
-                throw new Error(data.error || "Upload failed");
-            }
+            const { error: dbError } = await supabase.from("cv").insert({ file_url: data.publicUrl });
+            if (dbError) throw dbError;
+
+            fetchCv();
+            toast.success("CV uploaded successfully!");
         } catch (error: any) {
             console.error("CV Upload Error:", error);
             toast.error(error.message || "Failed to upload CV");
@@ -188,15 +150,16 @@ const AdminDashboard = () => {
     const handleDeleteCv = async () => {
         if (!cvData?.id || !confirm("Are you sure you want to delete the current CV?")) return;
         try {
-            const response = await fetch(`http://127.0.0.1:8000/cv/${cvData.id}`, {
-                method: "DELETE"
-            });
-            if (response.ok) {
-                setCvData(null);
-                toast.success("CV deleted successfully");
-            } else {
-                toast.error("Failed to delete CV");
+            const file_name = cvData.file_url.split("/").pop();
+            if (file_name) {
+                await supabase.storage.from("cv-files").remove([`cv/${file_name}`]);
             }
+            
+            const { error } = await supabase.from("cv").delete().eq("id", cvData.id);
+            if (error) throw error;
+            
+            setCvData(null);
+            toast.success("CV deleted successfully");
         } catch (error) {
             console.error("Delete CV error:", error);
             toast.error("Error deleting CV");
@@ -207,22 +170,21 @@ const AdminDashboard = () => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        const formData = new FormData();
-        formData.append("file", file);
-
         try {
-            const response = await fetch("http://127.0.0.1:8000/upload-profile-photo", {
-                method: "POST",
-                body: formData
-            });
-            const data = await response.json();
+            const file_path = `profile/${file.name}`;
+            const { error: uploadError } = await supabase.storage.from("profile-images").upload(file_path, file, { upsert: true });
+            if (uploadError) throw uploadError;
+
+            const { data } = supabase.storage.from("profile-images").getPublicUrl(file_path);
             
-            if (response.ok && data.url) {
-                fetchProfilePhoto();
-                toast.success("Profile Photo updated successfully!");
-            } else {
-                throw new Error(data.error || "Upload failed");
-            }
+            // Remove old entries to keep only one active
+            await supabase.from("profile_photo").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+
+            const { error: dbError } = await supabase.from("profile_photo").insert({ file_url: data.publicUrl });
+            if (dbError) throw dbError;
+
+            fetchProfilePhoto();
+            toast.success("Profile Photo updated successfully!");
         } catch (error: any) {
             console.error("Profile Photo Upload Error:", error);
             toast.error(error.message || "Failed to upload Profile Photo");
@@ -232,15 +194,16 @@ const AdminDashboard = () => {
     const handleDeleteProfilePhoto = async () => {
         if (!profilePhotoData?.id || !confirm("Are you sure you want to delete the current profile photo?")) return;
         try {
-            const response = await fetch(`http://127.0.0.1:8000/profile-photo/${profilePhotoData.id}`, {
-                method: "DELETE"
-            });
-            if (response.ok) {
-                setProfilePhotoData(null);
-                toast.success("Profile photo deleted successfully");
-            } else {
-                toast.error("Failed to delete profile photo");
+            const file_name = profilePhotoData.file_url.split("/").pop();
+            if (file_name) {
+                await supabase.storage.from("profile-images").remove([`profile/${file_name}`]);
             }
+
+            const { error } = await supabase.from("profile_photo").delete().eq("id", profilePhotoData.id);
+            if (error) throw error;
+            
+            setProfilePhotoData(null);
+            toast.success("Profile photo deleted successfully");
         } catch (error) {
             console.error("Delete profile photo error:", error);
             toast.error("Error deleting profile photo");
@@ -251,32 +214,23 @@ const AdminDashboard = () => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Set local preview instantly
         const preview = URL.createObjectURL(file);
         setLocalPreview(preview);
         setIsUploadingImage(true);
 
-        const formData = new FormData();
-        formData.append("file", file);
-
         try {
-            const response = await fetch("http://127.0.0.1:8000/upload-project-image", {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                },
-                body: formData
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                if (editingProject) {
-                    setEditingProject({ ...editingProject, image_url: data.file_url });
-                } else {
-                    setNewProject({ ...newProject, image_url: data.file_url });
-                }
-                toast.success("Image uploaded to server!");
+            const file_name = `projects/${file.name}`;
+            const { error: uploadError } = await supabase.storage.from("project-images").upload(file_name, file, { upsert: true });
+            if (uploadError) throw uploadError;
+            
+            const { data } = supabase.storage.from("project-images").getPublicUrl(file_name);
+            
+            if (editingProject) {
+                setEditingProject({ ...editingProject, image_url: data.publicUrl });
+            } else {
+                setNewProject({ ...newProject, image_url: data.publicUrl });
             }
+            toast.success("Image uploaded to server!");
         } catch (error) {
             toast.error("Failed to upload image");
         } finally {
