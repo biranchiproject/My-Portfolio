@@ -139,6 +139,27 @@ const HeroSection = () => {
     detectRetina: true,
   };
 
+  const subtitleText = "I build designs that solve problems, inspire action, and drive success.";
+  
+  const containerVariants = {
+    animate: {
+      transition: {
+        staggerChildren: 0.05
+      }
+    }
+  };
+
+  const letterVariants = {
+    animate: {
+      color: ["#9ca3af", "#22c55e", "#9ca3af"],
+      transition: { 
+        duration: 3, 
+        repeat: Infinity, 
+        ease: "easeInOut" 
+      }
+    }
+  };
+
   return (
     <section id="home" className="min-h-screen bg-gradient-dark flex items-center justify-center relative overflow-hidden pt-24 md:pt-28">
       {/* Animated ribbon text */}
@@ -167,9 +188,18 @@ const HeroSection = () => {
           </h1>
 
           {/* Subtitle */}
-          <p className="text-xl md:text-2xl text-gray-text max-w-3xl mx-auto mb-12 animate-slide-up" style={{ animationDelay: "0.6s" }}>
-            I build designs that solve problems, inspire action, and drive success.
-          </p>
+          <motion.p 
+            variants={containerVariants}
+            animate="animate"
+            className="text-xl md:text-2xl max-w-3xl mx-auto mb-12 animate-slide-up font-medium" 
+            style={{ animationDelay: "0.6s" }}
+          >
+            {subtitleText.split("").map((char, index) => (
+              <motion.span key={index} variants={letterVariants}>
+                {char}
+              </motion.span>
+            ))}
+          </motion.p>
 
           {/* Profile Photo */}
           <div className="flex justify-center mb-12 animate-scale-in" style={{ animationDelay: "0.8s" }}>
