@@ -8,10 +8,12 @@ import { toast } from "sonner";
 import { motion } from "framer-motion";
 import Magnetic from "./Magnetic";
 import { supabase } from "@/lib/supabase";
+import { useNavigate } from "react-router-dom";
 
 const roles = ["Creative Designer", "Full Stack Developer", "Cybersecurity Specialist", "Tech Visionary"];
 
 const HeroSection = () => {
+  const navigate = useNavigate();
   const [clickCount, setClickCount] = useState(0);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [cvUrl, setCvUrl] = useState<string | null>(null);
@@ -234,6 +236,14 @@ const HeroSection = () => {
                 className="border-neon-green text-neon-green hover:bg-neon-green hover:text-dark-bg font-semibold px-8 py-3 text-lg transition-all duration-300 min-w-[180px]"
               >
                 Get In Touch
+              </Button>
+            </Magnetic>
+            <Magnetic>
+              <Button
+                onClick={() => navigate("/achievements")}
+                className="bg-dark-surface border border-neon-green/30 text-neon-green hover:border-neon-green hover:bg-neon-green/10 font-semibold px-8 py-3 text-lg transition-all duration-300 min-w-[180px]"
+              >
+                My Achievements
               </Button>
             </Magnetic>
             <Magnetic>

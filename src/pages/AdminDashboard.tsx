@@ -22,6 +22,8 @@ const AdminDashboard = () => {
         image_url: ""
     });
     const [isUploadingImage, setIsUploadingImage] = useState(false);
+    const [achievements, setAchievements] = useState<any[]>([]);
+    const [isUploadingAchievement, setIsUploadingAchievement] = useState(false);
     const [localPreview, setLocalPreview] = useState<string | null>(null);
     const navigate = useNavigate();
     const isLoggedIn = localStorage.getItem("isAdminLoggedIn") === "true";
@@ -34,12 +36,14 @@ const AdminDashboard = () => {
             fetchProjects();
             fetchCv();
             fetchProfilePhoto();
+            fetchAchievements();
             
             // Live polling for real-time feel
             const interval = setInterval(() => {
                 fetchProjects();
                 fetchCv();
                 fetchProfilePhoto();
+                fetchAchievements();
             }, 10000); // Poll every 10 seconds
             
             return () => clearInterval(interval);
@@ -75,6 +79,16 @@ const AdminDashboard = () => {
             else setProfilePhotoData(null);
         } catch (error) {
             console.error("Fetch Profile Photo error:", error);
+        }
+    };
+
+    const fetchAchievements = async () => {
+        try {
+            const { data, error } = await supabase.from("achievements").select("*").order("created_at", { ascending: false });
+            if (error) throw error;
+            setAchievements(data || []);
+        } catch (error) {
+            console.error("Fetch achievements error:", error);
         }
     };
 
@@ -235,6 +249,54 @@ const AdminDashboard = () => {
             toast.error("Failed to upload image");
         } finally {
             setIsUploadingImage(false);
+        }
+    };
+
+    const handleAchievementUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setIsUploadingAchievement(true);
+        try {
+            const file_path = `certificates/${Date.now()}_${file.name}`;
+            const { error: uploadError } = await supabase.storage.from("certificates").upload(file_path, file);
+            if (uploadError) throw uploadError;
+
+            const { data: urlData } = supabase.storage.from("certificates").getPublicUrl(file_path);
+            
+            const { error: dbError } = await supabase.from("achievements").insert({
+                title: file.name.split('.')[0].replace(/[-_]/g, ' '),
+                image_url: urlData.publicUrl
+            });
+            if (dbError) throw dbError;
+
+            fetchAchievements();
+            toast.success("Achievement uploaded successfully!");
+        } catch (error: any) {
+            console.error("Achievement Upload Error:", error);
+            toast.error(error.message || "Failed to upload achievement");
+        } finally {
+            setIsUploadingAchievement(false);
+        }
+    };
+
+    const handleDeleteAchievement = async (id: string, imageUrl: string) => {
+        if (!confirm("Are you sure you want to delete this achievement?")) return;
+        try {
+            // Extract file path from URL
+            const urlParts = imageUrl.split('/');
+            const fileName = urlParts[urlParts.length - 1];
+            
+            await supabase.storage.from("certificates").remove([fileName]);
+            
+            const { error } = await supabase.from("achievements").delete().eq("id", id);
+            if (error) throw error;
+
+            fetchAchievements();
+            toast.success("Achievement deleted");
+        } catch (error) {
+            console.error("Delete achievement error:", error);
+            toast.error("Error deleting achievement");
         }
     };
 
@@ -444,6 +506,63 @@ const AdminDashboard = () => {
                                     </div>
                                 ))}
                             </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Achievements Management */}
+                    <Card className="bg-dark-surface border-dark-border lg:col-span-3">
+                        <CardHeader className="flex flex-row items-center justify-between">
+                            <div>
+                                <CardTitle className="text-xl font-bold">Achievements & Certifications</CardTitle>
+                                <p className="text-xs text-gray-text mt-1">Manage your professional milestones</p>
+                            </div>
+                            <label className="cursor-pointer group">
+                                <div className="flex items-center space-x-2 px-4 py-2 bg-neon-green text-dark-bg rounded-lg font-bold hover:shadow-neon transition-all">
+                                    {isUploadingAchievement ? (
+                                        <div className="w-4 h-4 border-2 border-dark-bg border-t-transparent rounded-full animate-spin"></div>
+                                    ) : (
+                                        <Plus className="w-4 h-4" />
+                                    )}
+                                    <span>{isUploadingAchievement ? "Uploading..." : "Upload Certificate"}</span>
+                                </div>
+                                <input 
+                                    type="file" 
+                                    className="hidden" 
+                                    accept="image/*" 
+                                    onChange={handleAchievementUpload}
+                                    disabled={isUploadingAchievement}
+                                />
+                            </label>
+                        </CardHeader>
+                        <CardContent>
+                            {achievements.length > 0 ? (
+                                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                                    {achievements.map((achievement) => (
+                                        <div key={achievement.id} className="group relative aspect-square bg-dark-bg rounded-lg overflow-hidden border border-dark-border">
+                                            <img 
+                                                src={achievement.image_url} 
+                                                alt={achievement.title} 
+                                                className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                                            />
+                                            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                                <button 
+                                                    onClick={() => handleDeleteAchievement(achievement.id, achievement.image_url)}
+                                                    className="p-2 bg-destructive/20 text-destructive border border-destructive/40 rounded-full hover:bg-destructive hover:text-white transition-all"
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                </button>
+                                            </div>
+                                            <div className="absolute bottom-0 left-0 right-0 p-1 bg-dark-bg/80 backdrop-blur-sm text-[10px] text-center truncate">
+                                                {achievement.title}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="text-center py-12 border-2 border-dashed border-dark-border rounded-xl">
+                                    <p className="text-sm text-gray-text italic">No certificates found in digital vaults...</p>
+                                </div>
+                            )}
                         </CardContent>
                     </Card>
                 </div>
