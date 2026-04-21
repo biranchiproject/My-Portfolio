@@ -1,189 +1,266 @@
 import { useState } from "react";
-import { ChevronDown, Code, Palette, Target, Users, Smartphone, Brain, Server, Layers, Rocket } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  ChevronDown,
+  Shield,
+  Lock,
+  Wifi,
+  Bug,
+  Globe,
+  Cloud,
+  Layout,
+  Brain,
+  Cpu,
+  Database,
+  Mic,
+  ArrowRight
+} from "lucide-react";
 
 const ServicesSection = () => {
-  const [openService, setOpenService] = useState<number | null>(0);
+  const [openService, setOpenService] = useState<string | null>(null);
 
-  const services = [
+  const cybersecurityServices = [
     {
-      id: 0,
-      icon: <Code className="w-6 h-6" />,
-      title: "Website Development",
-      description: "Building fast, scalable, and responsive websites",
+      id: "eth-hacking",
+      icon: <Shield className="w-6 h-6" />,
+      title: "Ethical Hacking & Penetration Testing",
+      description: "Identifying vulnerabilities through real-world attack simulations.",
       details: [
-        "Webflow Development",
-        "CMS Implementation",
-        "Responsive Design",
-        "Web Performance Optimization",
-        "Basic E-commerce Solutions"
+        "Infrastructure VAPT",
+        "Security Assessment",
+        "Vulnerability Scanning",
+        "Remediation Guidance"
       ]
     },
     {
-      id: 1,
-      icon: <Smartphone className="w-6 h-6" />,
-      title: "Basic Android Development",
-      description: "Building functional and user-friendly Android applications",
+      id: "web-sec",
+      icon: <Lock className="w-6 h-6" />,
+      title: "Web Application Security",
+      description: "Securing platforms against XSS, SQL Injection, and modern threats.",
       details: [
-        "Basic Java & Kotlin",
-        "Basic API Integration",
-        "Basic App Maintenance"
+        "OWASP Top 10 Audit",
+        "Authentication Security",
+        "Secure API Design",
+        "CSRF & Session Protection"
       ]
     },
     {
-      id: 2,
+      id: "net-sec",
+      icon: <Wifi className="w-6 h-6" />,
+      title: "Network Security & Analysis",
+      description: "Securing network traffic using Wireshark, Nmap, and traffic analysis.",
+      details: [
+        "Traffic Interception",
+        "Protocol Analysis",
+        "Firewall Optimization",
+        "Intrusion Detection"
+      ]
+    },
+    {
+      id: "bug-bounty",
+      icon: <Bug className="w-6 h-6" />,
+      title: "Bug Bounty & Research",
+      description: "Responsible disclosure of security flaws in complex systems.",
+      details: [
+        "Vulnerability Research",
+        "Exploit Development",
+        "PoC Creation",
+        "Security Reporting"
+      ]
+    },
+    {
+      id: "secure-web",
+      icon: <Globe className="w-6 h-6" />,
+      title: "Secure Web Development",
+      description: "Building fast, high-performance websites with a security-first mindset.",
+      details: [
+        "Full-stack Architecture",
+        "Security Integration",
+        "Performance Optimization",
+        "Responsive & Scalable"
+      ]
+    },
+
+
+  ];
+
+  const aiAgentServices = [
+    {
+      id: "ai-agents",
       icon: <Brain className="w-6 h-6" />,
-      title: "AI & LLM Development",
-      description: "Building intelligent applications using latest AI technologies",
+      title: "AI Agent Development",
+      description: "Building autonomous agents using LLMs, APIs, and automation.",
       details: [
-        "RAG Implementation",
-        "LLM Integration (GPT, Claude, Llama)",
-        "Prompt Engineering",
-        "AI Agents & Chatbots",
-        "Document Intelligence"
+        "Custom Agent Workflows",
+        "API & Tool Integration",
+        "Autonomous Decision Logic",
+        "Long-term Memory Systems"
       ]
     },
     {
-      id: 3,
-      icon: <Server className="w-6 h-6" />,
-      title: "Basic Backend Development",
-      description: "Designing scalable and secure server-side architectures",
+      id: "ai-automation",
+      icon: <Cpu className="w-6 h-6" />,
+      title: "Custom AI Tools & Automation",
+      description: "Creating AI-powered tools for workflow and productivity automation.",
       details: [
-        "RESTful API Design",
-        "Database Management (SQL/NoSQL)",
-        "Authentication & Security",
-        "Microservices",
-        "Serverless Functions"
+        "Python-based Automations",
+        "Custom Model Fine-tuning",
+        "Automated Content Pipeline",
+        "Task Automation APIs"
       ]
     },
     {
-      id: 4,
-      icon: <Layers className="w-6 h-6" />,
-      title: "Full-Stack Engineering",
-      description: "End-to-end web application development",
+      id: "rag-systems",
+      icon: <Database className="w-6 h-6" />,
+      title: "RAG-based Systems",
+      description: "Building intelligent retrieval systems with LLMs and Vector DBs.",
       details: [
-        "React/Next.js Frontend",
-        "Node.js/Python Backend",
-        "State Management",
-        "API Integration",
-        "Performance Tuning"
+        "Vector Search (Pinecone/Milvus)",
+        "Document Embedding",
+        "Large Dataset Context",
+        "Scalable AI Search"
       ]
     },
     {
-      id: 5,
-      icon: <Rocket className="w-6 h-6" />,
-      title: "Basic Deployment & DevOps",
-      description: "Streamlining development and production workflows",
+      id: "voice-ai",
+      icon: <Mic className="w-6 h-6" />,
+      title: "Voice AI Assistants",
+      description: "Developing real-time voice-enabled AI assistants.",
       details: [
-        "CI/CD Pipelines",
-        "Docker Containerization",
-        "Cloud Hosting (AWS/GCP/Azure)",
-        "Server Configuration",
-        "Monitoring & Logging"
-      ]
-    },
-    {
-      id: 6,
-      icon: <Palette className="w-6 h-6" />,
-      title: "UI/UX Design",
-      description: "Creating intuitive and beautiful user experiences",
-      details: [
-        "User Interface Design",
-        "User Experience Research",
-        "Wireframing & Prototyping",
-        "Design Systems",
-        "Usability Testing"
-      ]
-    },
-    {
-      id: 7,
-      icon: <Target className="w-6 h-6" />,
-      title: "Brand Design",
-      description: "Developing cohesive brand identities that resonate",
-      details: [
-        "Logo Design",
-        "Brand Guidelines",
-        "Visual Identity Systems",
-        "Marketing Materials",
-        "Brand Strategy"
-      ]
-    },
-    {
-      id: 8,
-      icon: <Users className="w-6 h-6" />,
-      title: "Art Lead",
-      description: "Leading creative teams to deliver exceptional results",
-      details: [
-        "Creative Direction",
-        "Team Leadership",
-        "Project Management",
-        "Quality Assurance",
-        "Client Communication"
+        "Speech-to-Text Integration",
+        "Real-time Logic Flow",
+        "Natural Voice Generation",
+        "Interactive AI Coaching"
       ]
     }
   ];
 
-  const toggleService = (id: number) => {
+  const toggleService = (id: string) => {
     setOpenService(openService === id ? null : id);
   };
 
+  const ServiceCard = ({ service }: { service: any }) => (
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className={`group bg-dark-bg/40 border border-dark-border rounded-2xl overflow-hidden transition-all duration-500 hover:border-neon-green/40 hover:shadow-[0_0_20px_rgba(0,255,163,0.1)] ${openService === service.id ? "bg-dark-surface/60 border-neon-green/30" : ""
+        }`}
+    >
+      <button
+        onClick={() => toggleService(service.id)}
+        className="w-full px-6 py-5 text-left flex items-center justify-between"
+      >
+        <div className="flex items-center space-x-4">
+          <div className={`p-3 rounded-xl transition-all duration-300 ${openService === service.id ? "bg-neon-green text-dark-bg" : "bg-dark-surface text-neon-green group-hover:bg-neon-green/10"
+            }`}>
+            {service.icon}
+          </div>
+          <div>
+            <h3 className="text-lg font-bold text-foreground mb-1 group-hover:text-neon-green transition-colors">
+              {service.title}
+            </h3>
+            <p className="text-sm text-gray-text line-clamp-1">
+              {service.description}
+            </p>
+          </div>
+        </div>
+        <div className={`transition-transform duration-300 ${openService === service.id ? "rotate-180" : ""}`}>
+          <ChevronDown className={`w-5 h-5 ${openService === service.id ? "text-neon-green" : "text-gray-text"}`} />
+        </div>
+      </button>
+
+      <AnimatePresence>
+        {openService === service.id && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="px-6 pb-6"
+          >
+            <div className="pt-4 border-t border-dark-border/50">
+              <p className="text-gray-text text-sm mb-4">
+                {service.description}
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {service.details.map((detail: string, index: number) => (
+                  <div
+                    key={index}
+                    className="flex items-center space-x-2 text-xs text-foreground/80 bg-dark-surface/40 p-2 rounded-lg border border-dark-border/30 hover:border-neon-green/20 transition-all"
+                  >
+                    <ArrowRight className="w-3 h-3 text-neon-green" />
+                    <span>{detail}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+
   return (
-    <section id="services" className="py-12 md:py-20 bg-dark-surface">
+    <section id="services" className="py-24 relative overflow-hidden">
+      {/* Background Ornaments */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-neon-green/5 rounded-full blur-[120px] -z-10 animate-pulse"></div>
+      <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-neon-green/5 rounded-full blur-[100px] -z-10"></div>
+
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            🚀 My <span className="text-neon-green">Services</span>
-          </h2>
-          <p className="text-xl text-gray-text max-w-3xl mx-auto">
-            I help brands and individuals elevate their digital presence through strategy, design, and development.
-          </p>
+        <div className="text-center mb-20">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl md:text-6xl font-bold font-tech mb-6 tracking-tighter">
+              MY <span className="text-neon-green">SPECIALIZED</span> SERVICES
+            </h2>
+            <div className="w-24 h-1 bg-neon-green mx-auto mb-8"></div>
+            <p className="text-xl text-gray-text max-w-2xl mx-auto font-light leading-relaxed">
+              Focusing on high-impact security solutions and next-gen AI agent development to build secure, autonomous digital futures.
+            </p>
+          </motion.div>
         </div>
 
-        <div className="max-w-4xl mx-auto space-y-4">
-          {services.map((service) => (
-            <div
-              key={service.id}
-              className="bg-gradient-card border border-dark-border rounded-xl overflow-hidden transition-all duration-300 hover:shadow-neon"
-            >
-              <button
-                onClick={() => toggleService(service.id)}
-                className="w-full px-6 py-6 text-left flex items-center justify-between hover:bg-dark-surface/50 transition-colors duration-300"
-              >
-                <div className="flex items-center space-x-4">
-                  <div className="text-neon-green">
-                    {service.icon}
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-foreground mb-1">
-                      {service.title}
-                    </h3>
-                    <p className="text-gray-text">
-                      {service.description}
-                    </p>
-                  </div>
-                </div>
-                <ChevronDown
-                  className={`w-5 h-5 text-neon-green transition-transform duration-300 ${openService === service.id ? "transform rotate-180" : ""
-                    }`}
-                />
-              </button>
-
-              {openService === service.id && (
-                <div className="px-6 pb-6 border-t border-dark-border/50">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
-                    {service.details.map((detail, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center space-x-2 text-gray-text"
-                      >
-                        <div className="w-2 h-2 bg-neon-green rounded-full"></div>
-                        <span>{detail}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          {/* Cybersecurity Column */}
+          <div className="space-y-8">
+            <div className="flex items-center space-x-4 mb-8">
+              <div className="w-12 h-12 rounded-2xl bg-neon-green/10 flex items-center justify-center border border-neon-green/20">
+                <Shield className="w-6 h-6 text-neon-green" />
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold text-foreground font-tech">CYBERSECURITY</h3>
+                <p className="text-xs text-neon-green/60 tracking-widest uppercase">Offensive & Defensive Security</p>
+              </div>
             </div>
-          ))}
+            <div className="space-y-4">
+              {cybersecurityServices.map((service) => (
+                <ServiceCard key={service.id} service={service} />
+              ))}
+            </div>
+          </div>
+
+          {/* AI & Agent Column */}
+          <div className="space-y-8">
+            <div className="flex items-center space-x-4 mb-8">
+              <div className="w-12 h-12 rounded-2xl bg-neon-green/10 flex items-center justify-center border border-neon-green/20">
+                <Brain className="w-6 h-6 text-neon-green" />
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold text-foreground font-tech">AI & AGENT DEV</h3>
+                <p className="text-xs text-neon-green/60 tracking-widest uppercase">Autonomous intelligence</p>
+              </div>
+            </div>
+            <div className="space-y-4">
+              {aiAgentServices.map((service) => (
+                <ServiceCard key={service.id} service={service} />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>

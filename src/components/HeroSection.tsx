@@ -10,7 +10,7 @@ import Magnetic from "./Magnetic";
 import { supabase } from "@/lib/supabase";
 import { useNavigate } from "react-router-dom";
 
-const roles = ["Creative Designer", "Full Stack Developer", "Cybersecurity Specialist", "Tech Visionary"];
+const roles = ["Cybersecurity Specialist", "AI Agent Developer", "Security Researcher", "Full Stack Developer"];
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -141,7 +141,7 @@ const HeroSection = () => {
     detectRetina: true,
   };
 
-  const subtitleText = "I build designs that solve problems, inspire action, and drive success.";
+  const subtitleText = "Securing the digital frontier and building intelligent agents for the future.";
   
   const containerVariants = {
     animate: {
@@ -209,7 +209,7 @@ const HeroSection = () => {
               <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-neon-green shadow-neon-strong animate-float">
                 <img
                   src={profilePhotoUrl || profilePhoto}
-                  alt="Biranchi - Creative Designer & Developer"
+                  alt="Biranchi - Cybersecurity Enthusiast & AI Developer"
                   className="w-full h-full object-cover"
                 />
               </div>

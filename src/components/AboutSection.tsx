@@ -9,19 +9,18 @@ const AboutSection = () => {
             </h2>
 
             <p className="text-xl text-neon-green mb-8 font-semibold">
-              Creative Designer & Developer
+              Cybersecurity Enthusiast & AI Developer
             </p>
-
+ 
             <div className="space-y-6 text-lg md:text-xl text-gray-text leading-relaxed max-w-3xl mx-auto">
               <p>
-                I am a versatile Full-Stack Developer and Creative Designer based in Bhubaneswar, Odisha.
-                My expertise lies in building intelligent applications through <span className="text-neon-green">AI & LLM integration</span>,
-                robust backend systems, and native <span className="text-neon-green">Android development</span>.
+                <span className="text-neon-green">Cybersecurity</span> enthusiast with a strong focus on securing systems, identifying <span className="text-neon-green">vulnerabilities</span>, and implementing modern <span className="text-neon-green">security</span> practices. I have hands-on experience in web application security, network analysis, and ethical hacking fundamentals.
               </p>
               <p>
-                I don't just write code; I design experiences. With advanced proficiency in <span className="text-neon-green">Figma</span> and <span className="text-neon-green">Webflow</span>,
-                I craft compelling brand identities and intuitive user interfaces. I bridge the gap between
-                complex engineering and elegant design, delivering scalable digital solutions that leave a lasting impact.
+                I build security-first applications and actively work on identifying real-world <span className="text-neon-green">vulnerabilities</span> through testing and research. Alongside <span className="text-neon-green">cybersecurity</span>, I develop intelligent <span className="text-neon-green">AI</span>-powered systems and automation tools, combining <span className="text-neon-green">security</span> with modern technologies.
+              </p>
+              <p>
+                Passionate about continuous learning, I stay updated with evolving threats, tools, and defense strategies to build secure, scalable, and future-ready systems.
               </p>
             </div>
           </div>

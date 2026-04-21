@@ -1,48 +1,31 @@
-import { Brain, Server, Layers, Rocket, Figma, Code2, Palette, Users, Smartphone, Database } from "lucide-react";
+import { Brain, Server, Layers, Rocket, Figma, Code2, Palette, Users, Smartphone, Database, ShieldCheck } from "lucide-react";
 
 const SkillsSection = () => {
   const skills = [
+    {
+      icon: <ShieldCheck className="w-8 h-8" />,
+      title: "Cybersecurity & Ethical Hacking",
+      description: "Securing web applications, identifying vulnerabilities, and performing penetration testing using tools like Nmap, Wireshark, and Burp Suite. Focused on protecting systems against XSS, SQL Injection, and modern cyber threats."
+    },
+    {
+      icon: <Database className="w-8 h-8" />,
+      title: "Basics of Python",
+      description: "Knowledge of basic Python programming, used for scripting, automated workflows, and problem-solving. Exploring AI integration and security scripting through Python."
+    },
     {
       icon: <Brain className="w-8 h-8" />,
       title: "AI & LLM Development",
       description: "Building intelligent applications using Retrieval-Augmented Generation (RAG), LLM integrations (local and API-based), prompt engineering, and document-grounded AI systems."
     },
-    {
-      icon: <Database className="w-8 h-8" />,
-      title: "Database & Backend Services",
-      description: "Managing and integrating modern databases with scalable backend systems, including real-time data handling, authentication, and efficient data modeling.",
-      points: [
-        "Supabase (Authentication, Realtime Database, APIs)",
-        "MongoDB (CRUD Operations, NoSQL Data Modeling)",
-        "PostgreSQL (Relational Database, Queries, Schema Design)",
-        "Firebase (Realtime Sync, Firestore, Authentication)"
-      ]
-    },
-    {
-      icon: <Server className="w-8 h-8" />,
-      title: "Backend Development",
-      description: "Designing scalable REST APIs, implementing authentication, handling databases, and building secure server-side logic for production-ready applications."
-    },
-    {
-      icon: <Layers className="w-8 h-8" />,
-      title: "Full-Stack Engineering",
-      description: "Integrating frontend and backend systems into cohesive, high-performance applications with clean architecture and efficient data flow."
-    },
+
+
     {
       icon: <Rocket className="w-8 h-8" />,
       title: "Deployment & DevOps",
       description: "Managing production deployments, server configuration, environment setup, and performance optimization for reliable and scalable applications."
     },
-    {
-      icon: <Code2 className="w-8 h-8" />,
-      title: "Webflow",
-      description: "I build fast, scalable, responsive sites with Webflow's powerful visual development platform."
-    },
-    {
-      icon: <Smartphone className="w-8 h-8" />,
-      title: "Android Development",
-      description: "Building functional Android applications with Java and Kotlin, focusing on user-friendly interfaces and API integration."
-    },
+
+
     {
       icon: <Figma className="w-8 h-8" />,
       title: "Figma",
@@ -53,11 +36,7 @@ const SkillsSection = () => {
       title: "Art Lead",
       description: "Creative direction for digital teams, ensuring cohesive brand experiences across all touchpoints."
     },
-    {
-      icon: <Palette className="w-8 h-8" />,
-      title: "Brand Design",
-      description: "Crafting memorable brand identities that resonate with target audiences and drive business growth."
-    }
+
   ];
 
   return (
