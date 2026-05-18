@@ -1,73 +1,180 @@
-# Welcome to your Lovable project
+# Biranchi - Creative Designer & Developer Portfolio
 
-## Project info
+## 🚀 Project Overview
 
-**URL**: https://lovable.dev/projects/3e0b70f0-4e66-444d-b66e-b5470359a1a5
+A modern, high-performance portfolio website built with **Vite**, **React**, **TypeScript**, and **Tailwind CSS**. Features a beautiful dark theme with neon accents, smooth animations, and fully responsive design.
 
-## How can I edit this code?
+**Live**: [biranchi.dev](https://biranchi.dev)
 
-There are several ways of editing your application.
+## 📋 Table of Contents
 
-**Use Lovable**
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [Development](#development)
+- [Building](#building)
+- [Deployment](#deployment)
+- [Project Structure](#project-structure)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/3e0b70f0-4e66-444d-b66e-b5470359a1a5) and start prompting.
+## ✨ Features
 
-Changes made via Lovable will be committed automatically to this repo.
+- ⚡ **Lightning-fast** - Vite + React for optimal performance
+- 🎨 **Modern Design** - Custom dark theme with neon green accents
+- 📱 **Fully Responsive** - Works perfectly on all devices
+- ✅ **Accessible** - WCAG compliant components (Radix UI)
+- 🎬 **Smooth Animations** - Framer Motion for elegant transitions
+- 📧 **Contact Form** - EmailJS integration for direct messaging
+- 🔒 **Type Safe** - Full TypeScript support
+- 🎯 **SEO Optimized** - Proper meta tags and semantic HTML
 
-**Use your preferred IDE**
+## 🛠️ Tech Stack
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Frontend
+- **Vite 5** - Next-generation build tool
+- **React 18** - UI library
+- **TypeScript** - Type safety
+- **Tailwind CSS 3** - Utility-first styling
+- **Radix UI** - Accessible component primitives
+- **Framer Motion** - Animation library
+- **React Router** - Client-side routing
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Backend & Services
+- **Supabase** - Database and auth
+- **EmailJS** - Email service
+- **React Query** - Data fetching & caching
 
-Follow these steps:
+### Development
+- **ESLint** - Code quality
+- **Vite SWC** - Fast transpilation
+- **TypeScript ESLint** - TS linting
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## 🚀 Getting Started
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Prerequisites
+- Node.js 16+ (use [nvm](https://github.com/nvm-sh/nvm) for version management)
+- npm or yarn
 
-# Step 3: Install the necessary dependencies.
-npm i
+### Installation
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
+# Clone the repository
+git clone https://github.com/biranchiproject/My-Portfolio.git
+cd My-Portfolio
+
+# Install dependencies
+npm install
+
+# Start development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The app will be available at `http://localhost:8080`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 💻 Development
 
-**Use GitHub Codespaces**
+```bash
+# Start dev server with hot reload
+npm run dev
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+# Run linter
+npm run lint
 
-## What technologies are used for this project?
+# Preview production build locally
+npm run preview
+```
 
-This project is built with:
+## 🏗️ Building
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+```bash
+# Production build
+npm run build
 
-## How can I deploy this project?
+# Development build
+npm run build:dev
+```
 
-Simply open [Lovable](https://lovable.dev/projects/3e0b70f0-4e66-444d-b66e-b5470359a1a5) and click on Share -> Publish.
+Build output is in the `dist/` folder, ready for deployment.
 
-## Can I connect a custom domain to my Lovable project?
+## 🌐 Deployment
 
-Yes, you can!
+### Cloudflare Pages
+1. Push to GitHub
+2. Connect repository in Cloudflare Pages dashboard
+3. Build command: `npm run build`
+4. Build output directory: `dist`
+5. Deploy!
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### Manual Deployment
+```bash
+npm run build
+# Deploy the dist/ folder to your hosting provider
+```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## 📁 Project Structure
+
+```
+My-Portfolio/
+├── src/
+│   ├── components/        # React components
+│   │   ├── Header.tsx
+│   │   ├── Footer.tsx
+│   │   ├── HeroSection.tsx
+│   │   └── ...
+│   ├── pages/            # Page components
+│   │   ├── Index.tsx     # Home page
+│   │   ├── Projects.tsx
+│   │   └── ...
+│   ├── ui/               # shadcn-ui components
+│   ├── App.tsx           # Main app component
+│   ├── main.tsx          # Entry point
+│   └── index.css         # Global styles
+├── public/               # Static assets
+├── dist/                 # Production build
+├── index.html            # HTML template
+├── vite.config.ts        # Vite configuration
+├── tailwind.config.ts    # Tailwind configuration
+├── tsconfig.json         # TypeScript configuration
+└── package.json          # Dependencies
+
+```
+
+## 🎨 Customization
+
+### Colors
+Edit `tailwind.config.ts` to customize the theme:
+```typescript
+neon: {
+  green: "hsl(var(--neon-green))"
+}
+```
+
+### Content
+Update component files in `src/components/` to modify content and styling.
+
+### Metadata
+Edit `index.html` for SEO and social meta tags.
+
+## 📧 Contact Form
+
+Uses EmailJS for email handling. Set up by:
+1. Create account at [EmailJS](https://www.emailjs.com)
+2. Add your service ID and template ID to the form component
+
+## 🔧 Environment Variables
+
+Create `.env.local` if needed:
+```
+VITE_API_URL=your_api_url
+```
+
+## 📄 License
+
+© 2026 Biranchi Narayan Sahoo. All rights reserved.
+
+## 🤝 Support
+
+For issues or questions, please create an issue on [GitHub](https://github.com/biranchiproject/My-Portfolio/issues)
+
+---
+
+Built with ❤️ by Biranchi

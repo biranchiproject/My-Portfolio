@@ -1,14 +1,7 @@
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
 User-agent: *
 Allow: /
+Sitemap: https://biranchi.dev/sitemap.xml
+
+# Disallow Cloudflare caching of unnecessary paths
+Disallow: /.well-known/
+Disallow: /admin/
