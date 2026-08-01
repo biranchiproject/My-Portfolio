@@ -3,11 +3,16 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ScrollToTop from "./components/ScrollToTop";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Projects from "./pages/Projects";
 import AdminDashboard from "./pages/AdminDashboard";
 import Achievements from "./pages/Achievements";
+import StudentLancer from "./pages/StudentLancer";
+import Services from "./pages/Services";
+import Cybersecurity from "./pages/Cybersecurity";
+import Education from "./pages/Education";
 
 
 const queryClient = new QueryClient();
@@ -18,8 +23,13 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/student-lancer" element={<StudentLancer />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/cybersecurity" element={<Cybersecurity />} />
+          <Route path="/education" element={<Education />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/achievements" element={<Achievements />} />

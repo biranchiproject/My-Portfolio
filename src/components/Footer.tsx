@@ -1,11 +1,14 @@
+import { Link } from "react-router-dom";
 import { Github, Linkedin, Instagram, Mail } from "lucide-react";
 
 const Footer = () => {
-  const quickLinks = [
-    { name: "Privacy Policy", href: "#" },
-    { name: "Terms & Conditions", href: "#" },
-    { name: "FAQ", href: "#" },
-    { name: "About Us", href: "#about" },
+  const pageLinks = [
+    { name: "Student Lancer", to: "/student-lancer" },
+    { name: "Services & Skills", to: "/services" },
+    { name: "Cybersecurity", to: "/cybersecurity" },
+    { name: "Education", to: "/education" },
+    { name: "My Work", to: "/projects" },
+    { name: "Achievements", to: "/achievements" },
   ];
 
   const socialLinks = [
@@ -28,8 +31,17 @@ const Footer = () => {
               </span>
             </div>
             <p className="text-gray-text leading-relaxed max-w-md">
-              Creative Designer & Developer based in Cuttack, Odisha.
-              Building digital experiences that inspire and drive success.
+              Freelance Developer at{" "}
+              <a
+                href="https://www.studentlancer.in/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-neon-green hover:text-foreground transition-colors duration-300"
+              >
+                StudentLancer
+              </a>{" "}
+              — Cybersecurity Enthusiast, AI Developer & Full Stack Developer based in Bhubaneswar, Odisha.
+              Building secure digital experiences and handing them over completely error-free.
             </p>
 
             {/* Social Links */}
@@ -49,18 +61,28 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-foreground font-semibold mb-4">Quick Links</h4>
+            <h4 className="text-foreground font-semibold mb-4">Pages</h4>
             <ul className="space-y-2">
-              {quickLinks.map((link, index) => (
-                <li key={index}>
-                  <a
-                    href={link.href}
+              {pageLinks.map((link) => (
+                <li key={link.to}>
+                  <Link
+                    to={link.to}
                     className="text-gray-text hover:text-neon-green transition-colors duration-300"
                   >
                     {link.name}
-                  </a>
+                  </Link>
                 </li>
               ))}
+              <li>
+                <a
+                  href="https://www.studentlancer.in/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-text hover:text-neon-green transition-colors duration-300"
+                >
+                  studentlancer.in ↗
+                </a>
+              </li>
             </ul>
           </div>
 

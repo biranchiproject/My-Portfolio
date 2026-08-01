@@ -1,6 +1,11 @@
 import { Shield, Lock, Terminal, ShieldAlert, Cpu } from "lucide-react";
 
-const CybersecuritySection = () => {
+interface CybersecuritySectionProps {
+  /** Dedicated page already renders the title, so the in-section heading can be turned off. */
+  showHeading?: boolean;
+}
+
+const CybersecuritySection = ({ showHeading = true }: CybersecuritySectionProps) => {
   const cards = [
     {
       icon: <Shield className="w-8 h-8" />,
@@ -35,14 +40,16 @@ const CybersecuritySection = () => {
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            🔐 <span className="text-neon-green">Cybersecurity</span>
-          </h2>
-          <p className="text-xl text-gray-text max-w-3xl mx-auto">
-            Exploring network security, ethical hacking, and vulnerability detection.
-          </p>
-        </div>
+        {showHeading && (
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+              🔐 <span className="text-neon-green">Cybersecurity</span>
+            </h2>
+            <p className="text-xl text-gray-text max-w-3xl mx-auto">
+              Exploring network security, ethical hacking, and vulnerability detection.
+            </p>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-6xl mx-auto">
           {cards.map((card, index) => (

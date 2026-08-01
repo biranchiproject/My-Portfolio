@@ -16,7 +16,12 @@ import {
   ArrowRight
 } from "lucide-react";
 
-const ServicesSection = () => {
+interface ServicesSectionProps {
+  /** Dedicated page already renders the title, so the in-section heading can be turned off. */
+  showHeading?: boolean;
+}
+
+const ServicesSection = ({ showHeading = true }: ServicesSectionProps) => {
   const [openService, setOpenService] = useState<string | null>(null);
 
   const cybersecurityServices = [
@@ -209,21 +214,23 @@ const ServicesSection = () => {
       <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-neon-green/5 rounded-full blur-[100px] -z-10"></div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-20">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-4xl md:text-6xl font-bold font-tech mb-6 tracking-tighter">
-              MY <span className="text-neon-green">SPECIALIZED</span> SERVICES
-            </h2>
-            <div className="w-24 h-1 bg-neon-green mx-auto mb-8"></div>
-            <p className="text-xl text-gray-text max-w-2xl mx-auto font-light leading-relaxed">
-              Focusing on high-impact security solutions and next-gen AI agent development to build secure, autonomous digital futures.
-            </p>
-          </motion.div>
-        </div>
+        {showHeading && (
+          <div className="text-center mb-20">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-4xl md:text-6xl font-bold font-tech mb-6 tracking-tighter">
+                MY <span className="text-neon-green">SPECIALIZED</span> SERVICES
+              </h2>
+              <div className="w-24 h-1 bg-neon-green mx-auto mb-8"></div>
+              <p className="text-xl text-gray-text max-w-2xl mx-auto font-light leading-relaxed">
+                Focusing on high-impact security solutions and next-gen AI agent development to build secure, autonomous digital futures.
+              </p>
+            </motion.div>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Cybersecurity Column */}

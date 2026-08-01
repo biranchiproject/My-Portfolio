@@ -1,6 +1,11 @@
 import { GraduationCap, Landmark, BookOpen } from "lucide-react";
 
-const EducationSection = () => {
+interface EducationSectionProps {
+    /** Dedicated page already renders the title, so the in-section heading can be turned off. */
+    showHeading?: boolean;
+}
+
+const EducationSection = ({ showHeading = true }: EducationSectionProps) => {
     const education = [
         {
             id: 1,
@@ -31,14 +36,16 @@ const EducationSection = () => {
     return (
         <section id="education" className="py-12 md:py-20 bg-dark-bg relative overflow-hidden">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div className="text-center mb-16">
-                    <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-                        📘 My <span className="text-neon-green">Education</span>
-                    </h2>
-                    <p className="text-xl text-gray-text max-w-3xl mx-auto">
-                        My academic journey and qualifications.
-                    </p>
-                </div>
+                {showHeading && (
+                    <div className="text-center mb-16">
+                        <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+                            📘 My <span className="text-neon-green">Education</span>
+                        </h2>
+                        <p className="text-xl text-gray-text max-w-3xl mx-auto">
+                            My academic journey and qualifications.
+                        </p>
+                    </div>
+                )}
 
                 <div className="max-w-4xl mx-auto space-y-8">
                     {education.map((edu, index) => (

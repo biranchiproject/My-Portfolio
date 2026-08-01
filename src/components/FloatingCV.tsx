@@ -11,8 +11,8 @@ const FloatingCV = () => {
   useEffect(() => {
     const fetchCv = async () => {
       try {
-        const { data, err } = await supabase.from('cv').select('file_url').order('created_at', { ascending: false }).limit(1).single();
-        if (err && err.code !== 'PGRST116') throw err;
+        const { data, error: fetchError } = await supabase.from('cv').select('file_url').order('created_at', { ascending: false }).limit(1).single();
+        if (fetchError && fetchError.code !== 'PGRST116') throw fetchError;
         
         if (data?.file_url) {
           setCvUrl(data.file_url);

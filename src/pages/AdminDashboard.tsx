@@ -3,17 +3,46 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, Trash2, Edit2, Upload, ExternalLink, Github, LogOut, ArrowLeft } from "lucide-react";
+import { Plus, Trash2, Edit2, Upload, ExternalLink, Github, LogOut, ArrowLeft, Mail, MailOpen, Reply, Inbox } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 
+type Project = {
+    id: string;
+    title: string;
+    description: string;
+    live_link: string;
+    github_link: string;
+    image_url: string;
+    created_at?: string;
+};
+
+type Achievement = {
+    id: string;
+    title: string;
+    image_url: string;
+    created_at?: string;
+};
+
+type ContactMessage = {
+    id: string;
+    name: string;
+    email: string;
+    message: string;
+    is_read: boolean;
+    created_at: string;
+};
+
+const getErrorMessage = (error: unknown, fallback: string) =>
+    error instanceof Error && error.message ? error.message : fallback;
+
 const AdminDashboard = () => {
-    const [projects, setProjects] = useState<any[]>([]);
+    const [projects, setProjects] = useState<Project[]>([]);
     const [cvData, setCvData] = useState<{id: string, file_url: string} | null>(null);
     const [profilePhotoData, setProfilePhotoData] = useState<{id: string, file_url: string} | null>(null);
     const [isAddingProject, setIsAddingProject] = useState(false);
-    const [editingProject, setEditingProject] = useState<any | null>(null);
+    const [editingProject, setEditingProject] = useState<Project | null>(null);
     const [newProject, setNewProject] = useState({
         title: "",
         description: "",
@@ -22,7 +51,8 @@ const AdminDashboard = () => {
         image_url: ""
     });
     const [isUploadingImage, setIsUploadingImage] = useState(false);
-    const [achievements, setAchievements] = useState<any[]>([]);
+    const [achievements, setAchievements] = useState<Achievement[]>([]);
+    const [messages, setMessages] = useState<ContactMessage[]>([]);
     const [isUploadingAchievement, setIsUploadingAchievement] = useState(false);
     const [localPreview, setLocalPreview] = useState<string | null>(null);
     const navigate = useNavigate();
@@ -37,13 +67,15 @@ const AdminDashboard = () => {
             fetchCv();
             fetchProfilePhoto();
             fetchAchievements();
-            
+            fetchMessages();
+
             // Live polling for real-time feel
             const interval = setInterval(() => {
                 fetchProjects();
                 fetchCv();
                 fetchProfilePhoto();
                 fetchAchievements();
+                fetchMessages();
             }, 10000); // Poll every 10 seconds
             
             return () => clearInterval(interval);
@@ -92,6 +124,42 @@ const AdminDashboard = () => {
         }
     };
 
+    const fetchMessages = async () => {
+        try {
+            const { data, error } = await supabase.from("contact_messages").select("*").order("created_at", { ascending: false });
+            if (error) throw error;
+            setMessages(data || []);
+        } catch (error) {
+            console.error("Fetch messages error:", error);
+        }
+    };
+
+    const handleToggleMessageRead = async (message: ContactMessage) => {
+        try {
+            const { error } = await supabase.from("contact_messages").update({ is_read: !message.is_read }).eq("id", message.id);
+            if (error) throw error;
+            fetchMessages();
+        } catch (error) {
+            console.error("Update message error:", error);
+            toast.error("Failed to update message");
+        }
+    };
+
+    const handleDeleteMessage = async (id: string) => {
+        if (!confirm("Delete this message permanently?")) return;
+        try {
+            const { error } = await supabase.from("contact_messages").delete().eq("id", id);
+            if (error) throw error;
+            toast.success("Message deleted");
+            fetchMessages();
+        } catch (error) {
+            console.error("Delete message error:", error);
+            toast.error("Failed to delete message");
+        }
+    };
+
+    const unreadCount = messages.filter((message) => !message.is_read).length;
+
     const handleLogout = () => {
         localStorage.removeItem("isAdminLoggedIn");
         navigate("/");
@@ -122,8 +190,8 @@ const AdminDashboard = () => {
             setEditingProject(null);
             setLocalPreview(null);
             fetchProjects();
-        } catch (error: any) {
-            toast.error(`Error: ${error.message || "Failed to update project"}`);
+        } catch (error) {
+            toast.error(`Error: ${getErrorMessage(error, "Failed to update project")}`);
         }
     };
 
@@ -155,9 +223,9 @@ const AdminDashboard = () => {
 
             fetchCv();
             toast.success("CV uploaded successfully!");
-        } catch (error: any) {
+        } catch (error) {
             console.error("CV Upload Error:", error);
-            toast.error(error.message || "Failed to upload CV");
+            toast.error(getErrorMessage(error, "Failed to upload CV"));
         }
     };
 
@@ -199,9 +267,9 @@ const AdminDashboard = () => {
 
             fetchProfilePhoto();
             toast.success("Profile Photo updated successfully!");
-        } catch (error: any) {
+        } catch (error) {
             console.error("Profile Photo Upload Error:", error);
-            toast.error(error.message || "Failed to upload Profile Photo");
+            toast.error(getErrorMessage(error, "Failed to upload Profile Photo"));
         }
     };
 
@@ -272,9 +340,9 @@ const AdminDashboard = () => {
 
             fetchAchievements();
             toast.success("Achievement uploaded successfully!");
-        } catch (error: any) {
+        } catch (error) {
             console.error("Achievement Upload Error:", error);
-            toast.error(error.message || "Failed to upload achievement");
+            toast.error(getErrorMessage(error, "Failed to upload achievement"));
         } finally {
             setIsUploadingAchievement(false);
         }
@@ -506,6 +574,98 @@ const AdminDashboard = () => {
                                     </div>
                                 ))}
                             </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Contact Messages */}
+                    <Card className="bg-dark-surface border-dark-border lg:col-span-3">
+                        <CardHeader className="flex flex-row items-center justify-between">
+                            <div>
+                                <CardTitle className="text-xl font-bold flex items-center gap-3">
+                                    <Inbox className="w-5 h-5 text-neon-green" />
+                                    Contact Messages
+                                    {unreadCount > 0 && (
+                                        <span className="px-2.5 py-0.5 rounded-full bg-neon-green text-dark-bg text-xs font-bold">
+                                            {unreadCount} new
+                                        </span>
+                                    )}
+                                </CardTitle>
+                                <p className="text-xs text-gray-text mt-1">
+                                    Messages sent from the contact form on your website
+                                </p>
+                            </div>
+                            <span className="text-xs text-gray-text">
+                                {messages.length} total
+                            </span>
+                        </CardHeader>
+                        <CardContent>
+                            {messages.length > 0 ? (
+                                <div className="space-y-4">
+                                    {messages.map((message) => (
+                                        <div
+                                            key={message.id}
+                                            className={`p-5 rounded-xl border transition-all ${
+                                                message.is_read
+                                                    ? "bg-dark-bg border-dark-border"
+                                                    : "bg-neon-green/5 border-neon-green/30"
+                                            }`}
+                                        >
+                                            <div className="flex flex-col md:flex-row md:items-start justify-between gap-3 mb-3">
+                                                <div className="min-w-0">
+                                                    <div className="flex items-center gap-2 flex-wrap">
+                                                        {!message.is_read && (
+                                                            <span className="w-2 h-2 rounded-full bg-neon-green flex-shrink-0"></span>
+                                                        )}
+                                                        <h4 className="font-bold text-foreground">{message.name}</h4>
+                                                        <a
+                                                            href={`mailto:${message.email}`}
+                                                            className="text-xs text-neon-green hover:underline break-all"
+                                                        >
+                                                            {message.email}
+                                                        </a>
+                                                    </div>
+                                                    <p className="text-[11px] text-gray-text mt-1">
+                                                        {new Date(message.created_at).toLocaleString()}
+                                                    </p>
+                                                </div>
+
+                                                <div className="flex items-center gap-2 flex-shrink-0">
+                                                    <button
+                                                        onClick={() => handleToggleMessageRead(message)}
+                                                        title={message.is_read ? "Mark as unread" : "Mark as read"}
+                                                        className="p-2 rounded-lg border border-dark-border text-gray-text hover:text-neon-green hover:border-neon-green/40 transition-all"
+                                                    >
+                                                        {message.is_read ? <MailOpen className="w-4 h-4" /> : <Mail className="w-4 h-4" />}
+                                                    </button>
+                                                    <a
+                                                        href={`mailto:${message.email}?subject=Re: your message&body=Hi ${message.name},%0D%0A%0D%0A`}
+                                                        title="Reply by email"
+                                                        className="p-2 rounded-lg border border-dark-border text-gray-text hover:text-neon-green hover:border-neon-green/40 transition-all"
+                                                    >
+                                                        <Reply className="w-4 h-4" />
+                                                    </a>
+                                                    <button
+                                                        onClick={() => handleDeleteMessage(message.id)}
+                                                        title="Delete message"
+                                                        className="p-2 rounded-lg border border-dark-border text-gray-text hover:text-destructive hover:border-destructive/40 transition-all"
+                                                    >
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <p className="text-sm text-gray-text leading-relaxed whitespace-pre-wrap break-words">
+                                                {message.message}
+                                            </p>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="text-center py-12 border-2 border-dashed border-dark-border rounded-xl">
+                                    <Inbox className="w-10 h-10 text-gray-text/30 mx-auto mb-3" />
+                                    <p className="text-sm text-gray-text italic">No messages yet — they will appear here instantly.</p>
+                                </div>
+                            )}
                         </CardContent>
                     </Card>
 

@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import emailjs from "@emailjs/browser";
+import { supabase } from "@/lib/supabase";
 
 const ContactSection = () => {
   const form = useRef<HTMLFormElement>(null);
@@ -28,15 +29,28 @@ const ContactSection = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    if (!form.current) return;
-
     try {
-      await emailjs.sendForm(
-        "service_k19te1r", // Service ID
-        "template_rmf4u1e", // Template ID
-        form.current,
-        "shXq1a-NPznrYz13n" // Public Key
-      );
+      // The message is stored first — this is what shows up in the Admin Dashboard.
+      const { error } = await supabase.from("contact_messages").insert({
+        name: formData.name,
+        email: formData.email,
+        message: formData.message,
+      });
+      if (error) throw error;
+
+      // Email delivery is a bonus: if EmailJS isn't configured, the message is saved anyway.
+      if (form.current) {
+        try {
+          await emailjs.sendForm(
+            "service_k19te1r", // Service ID
+            "template_rmf4u1e", // Template ID
+            form.current,
+            "shXq1a-NPznrYz13n" // Public Key
+          );
+        } catch (emailError) {
+          console.warn("EmailJS delivery failed — message is still saved in the dashboard:", emailError);
+        }
+      }
 
       toast({
         title: "Message sent successfully!",
@@ -44,9 +58,9 @@ const ContactSection = () => {
       });
 
       setFormData({ name: "", email: "", message: "" });
-      form.current.reset();
+      form.current?.reset();
     } catch (error) {
-      console.error("EmailJS Error:", error);
+      console.error("Save message error:", error);
       toast({
         title: "Error sending message",
         description: "Something went wrong. Please try again later.",

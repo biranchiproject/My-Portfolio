@@ -10,7 +10,7 @@ import Magnetic from "./Magnetic";
 import { supabase } from "@/lib/supabase";
 import { useNavigate } from "react-router-dom";
 
-const roles = ["Cybersecurity Specialist", "AI Agent Developer", "Security Researcher", "Full Stack Developer"];
+const roles = ["Freelance Developer", "Cybersecurity Specialist", "AI Agent Developer", "Security Researcher", "Full Stack Developer"];
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -154,10 +154,10 @@ const HeroSection = () => {
   const letterVariants = {
     animate: {
       color: ["#9ca3af", "#22c55e", "#9ca3af"],
-      transition: { 
-        duration: 25, 
-        repeat: Infinity, 
-        ease: "easeInOut" 
+      transition: {
+        duration: 25,
+        repeat: Infinity,
+        ease: "easeInOut" as const
       }
     }
   };
