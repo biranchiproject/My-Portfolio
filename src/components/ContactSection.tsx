@@ -29,29 +29,39 @@ const ContactSection = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
+    // Both delivery routes run independently — if one is down, the other still gets the message through.
+    let savedToDashboard = false;
+    let emailDelivered = false;
+
+    // Route 1: store it for the Admin Dashboard.
     try {
-      // The message is stored first — this is what shows up in the Admin Dashboard.
       const { error } = await supabase.from("contact_messages").insert({
         name: formData.name,
         email: formData.email,
         message: formData.message,
       });
       if (error) throw error;
+      savedToDashboard = true;
+    } catch (error) {
+      console.error("Could not save the message to the dashboard:", error);
+    }
 
-      // Email delivery is a bonus: if EmailJS isn't configured, the message is saved anyway.
-      if (form.current) {
-        try {
-          await emailjs.sendForm(
-            "service_k19te1r", // Service ID
-            "template_rmf4u1e", // Template ID
-            form.current,
-            "shXq1a-NPznrYz13n" // Public Key
-          );
-        } catch (emailError) {
-          console.warn("EmailJS delivery failed — message is still saved in the dashboard:", emailError);
-        }
+    // Route 2: send the email copy.
+    if (form.current) {
+      try {
+        await emailjs.sendForm(
+          "service_k19te1r", // Service ID
+          "template_rmf4u1e", // Template ID
+          form.current,
+          "shXq1a-NPznrYz13n" // Public Key
+        );
+        emailDelivered = true;
+      } catch (error) {
+        console.error("Could not deliver the message by email:", error);
       }
+    }
 
+    if (savedToDashboard || emailDelivered) {
       toast({
         title: "Message sent successfully!",
         description: "Thank you for reaching out. I'll get back to you soon.",
@@ -59,16 +69,15 @@ const ContactSection = () => {
 
       setFormData({ name: "", email: "", message: "" });
       form.current?.reset();
-    } catch (error) {
-      console.error("Save message error:", error);
+    } else {
       toast({
         title: "Error sending message",
         description: "Something went wrong. Please try again later.",
         variant: "destructive",
       });
-    } finally {
-      setIsSubmitting(false);
     }
+
+    setIsSubmitting(false);
   };
 
   const contactInfo = [
