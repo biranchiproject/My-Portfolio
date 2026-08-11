@@ -23,17 +23,10 @@ const AdminLogin = ({ isOpen, onOpenChange }: AdminLoginProps) => {
     setIsLoading(true);
 
     try {
-      const envUsername = import.meta.env.VITE_ADMIN_USERNAME;
-      const envPassword = import.meta.env.VITE_ADMIN_PASSWORD;
-
-      if (envUsername && envPassword && username === envUsername && password === envPassword) {
-        localStorage.setItem("isAdminLoggedIn", "true");
-        toast.success("Login successful!");
-        onOpenChange(false);
-        navigate("/admin");
-        setIsLoading(false);
-        return;
-      }
+      // NOTE: never compare against VITE_* env values here. Vite inlines every VITE_
+      // variable into the public JS bundle, so any credential checked this way ends up
+      // readable by anyone who opens the site or the repo. Credentials stay in the
+      // "admins" table and are only ever compared as bcrypt hashes.
 
       // 1. Fetch the admin record by username from the "admins" table
       const { data, error } = await supabase

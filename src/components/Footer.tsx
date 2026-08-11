@@ -13,7 +13,7 @@ const Footer = () => {
 
   const socialLinks = [
     { icon: <Github className="w-5 h-5" />, href: "https://github.com/settings/profile", label: "GitHub" },
-    { icon: <Linkedin className="w-5 h-5" />, href: "https://www.linkedin.com/in/biranchi-narayan-sahoo-98b695390/", label: "LinkedIn" },
+    { icon: <Linkedin className="w-5 h-5" />, href: "https://www.linkedin.com/in/biranchisahoo/", label: "LinkedIn" },
     { icon: <Instagram className="w-5 h-5" />, href: "https://www.instagram.com/biranchi._.sahoo?igsh=MWE4aWM0NWt4ZmRmbg==", label: "Instagram" },
     { icon: <Mail className="w-5 h-5" />, href: "mailto:sahoobiranchi8249@gmail.com", label: "Email" },
   ];
